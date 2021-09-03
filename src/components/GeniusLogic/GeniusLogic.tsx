@@ -112,7 +112,7 @@ const search = async () => {
         let artistName = artists[i];
         let spotifyResults = await searchSpotify();
         for (let i=0; i < spotifyResults.length; i++) {
-            if (spotifyResults[i].artists[0].name == artistName) {
+            if (spotifyResults[i].artists[0].name.toLowerCase() === artistName.toLowerCase()) {
                 console.log(`${spotifyResults[i].artists[0].name} - ${spotifyResults[i].name}`)
                 break;
             }

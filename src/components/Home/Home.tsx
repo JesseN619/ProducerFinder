@@ -9,9 +9,6 @@ interface Props{
 export const Home = ( props:Props) => {
     return (
         <div>
-            <div>
-                Hello World
-            </div>
             <GeniusLogic />
             {/* <form> */}
                 {/* <input id="song-search" type="text" />
