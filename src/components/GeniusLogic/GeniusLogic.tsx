@@ -1,6 +1,24 @@
 import React from 'react';
 
-let token = process.env.REACT_APP_GENIUS_ACCESS_TOKEN
+const geniusToken = process.env.REACT_APP_GENIUS_ACCESS_TOKEN;
+const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
+const clientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
+
+const getSpotifyToken = async () => {
+    const result = await fetch('https://accounts.spotify.com/api/token',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret)
+        },
+        body: 'grant_type=client_credentials'
+    });
+    const data = await result.json();
+    // console.log(data.access_token)
+    return data.access_token
+};
+
+
 
 const search = async () => {
 
@@ -11,7 +29,7 @@ const search = async () => {
         let searchValue = searchBox.value;
         console.log(searchValue);
 
-        let request = await fetch(`https://api.genius.com/search?q=${searchValue}&access_token=${token}`, {
+        let request = await fetch(`https://api.genius.com/search?q=${searchValue}&access_token=${geniusToken}`, {
             method: 'GET',
         });
 
@@ -25,7 +43,7 @@ const search = async () => {
     console.log(`Song ID: ${songId}`);
 
     const getProducerId = async () => {
-        let request = await fetch(`https://api.genius.com/songs/${songId}?access_token=${token}`, {
+        let request = await fetch(`https://api.genius.com/songs/${songId}?access_token=${geniusToken}`, {
             method: 'GET',
         });
 
@@ -43,7 +61,7 @@ const search = async () => {
     console.log(`Producer Name: ${producerName}`);
 
     const getTopSongs = async () => {
-        let request = await fetch(`https://api.genius.com/artists/${producerId}/songs?sort=popularity&access_token=${token}`, {
+        let request = await fetch(`https://api.genius.com/artists/${producerId}/songs?sort=popularity&access_token=${geniusToken}`, {
             method: 'GET',
         });
 
@@ -57,7 +75,6 @@ const search = async () => {
             artists.push(artist);
             let title = topSongsRaw[i].title;
             titles.push(title);
-            // console.log(`${title} - ${artist}`)
         }
         let topSongs = [artists, titles];
         return topSongs;
@@ -67,11 +84,40 @@ const search = async () => {
     console.log(topSongs);
     let artists = topSongs[0];
     let songs = topSongs[1];
-    for (let i=0; i < artists.length; i++) {
-        console.log(`${artists[i]} - ${songs[i]}`)
+
+    // Spotify
+
+    let spotifyToken = await getSpotifyToken();
+
+    let headers = new Headers([
+        ['Content-Type', 'applications/json'],
+        ['Accept', 'application/json'],
+        ['Authorization', `Bearer ${spotifyToken}`]
+    ]);
+
+    let songTitle = '';
+
+    const searchSpotify = async () => {
+        let request = await fetch(`https://api.spotify.com/v1/search?q=${songTitle}&type=track&market=US`,{
+            method: 'GET',
+            headers: headers
+        });
+
+        let response = await request.json();
+        return response.tracks.items;
     }
 
-    
+    for (let i=0; i < artists.length; i++) {
+        songTitle = songs[i];
+        let artistName = artists[i];
+        let spotifyResults = await searchSpotify();
+        for (let i=0; i < spotifyResults.length; i++) {
+            if (spotifyResults[i].artists[0].name == artistName) {
+                console.log(`${spotifyResults[i].artists[0].name} - ${spotifyResults[i].name}`)
+                break;
+            }
+        }
+    }
 
     const nameSection: HTMLElement = document.getElementById('producer-name') as HTMLElement
     nameSection.innerHTML = producerName;
