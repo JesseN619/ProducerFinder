@@ -2,7 +2,7 @@ import React from 'react';
 
 let token = process.env.REACT_APP_GENIUS_ACCESS_TOKEN
 
-const clickEvent = async () => {
+const search = async () => {
 
     const getSongId = async () => {
 
@@ -14,10 +14,6 @@ const clickEvent = async () => {
         let request = await fetch(`https://api.genius.com/search?q=${searchValue}&access_token=${token}`, {
             method: 'GET',
         });
-
-        // let request = await fetch(`https://api.genius.com/search?q=Kendrick%20Lamar%20hiiipower&access_token=${token}`, {
-        //     method: 'GET',
-        // });
 
         let response = await request.json();
         // TODO: instead of hits[0], show dropdown of top hits and let user choose
@@ -36,11 +32,15 @@ const clickEvent = async () => {
         let response = await request.json();
         // TODO: instead of producer_artists[0], show dropdown of all producers and let user choose
         let producerId = response.response.song.producer_artists[0].id;
-        return producerId;
+        let name = response.response.song.producer_artists[0].name;
+        return [producerId, name];
     }
 
-    let producerId = await getProducerId();
+    let producerInfo = await getProducerId();
+    let producerId = producerInfo[0];
+    let producerName = producerInfo[1];
     console.log(`Producer ID: ${producerId}`);
+    console.log(`Producer Name: ${producerName}`);
 
     const getTopSongs = async () => {
         let request = await fetch(`https://api.genius.com/artists/${producerId}/songs?sort=popularity&access_token=${token}`, {
@@ -65,6 +65,17 @@ const clickEvent = async () => {
 
     let topSongs = await getTopSongs();
     console.log(topSongs);
+    let artists = topSongs[0];
+    let songs = topSongs[1];
+    for (let i=0; i < artists.length; i++) {
+        console.log(`${artists[i]} - ${songs[i]}`)
+    }
+
+    
+
+    const nameSection: HTMLElement = document.getElementById('producer-name') as HTMLElement
+    nameSection.innerHTML = producerName;
+
 }
     
 
@@ -73,7 +84,8 @@ export const GeniusLogic = () => {
     return (
         <div>
             <input id="song-search" type="text" />
-            <button onClick={() => clickEvent()}>Button</button>
+            <button onClick={() => search()}>Button</button>
+            <h1 id="producer-name"></h1>
         </div>
     )
 
