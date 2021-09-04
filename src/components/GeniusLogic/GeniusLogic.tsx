@@ -18,8 +18,6 @@ const getSpotifyToken = async () => {
     return data.access_token
 };
 
-
-
 const search = async () => {
 
     const getSongId = async () => {
@@ -85,6 +83,11 @@ const search = async () => {
     let artists = topSongs[0];
     let songs = topSongs[1];
 
+    const listContainer = document.getElementById('list-container')!;
+    console.log(listContainer);
+    listContainer.innerHTML = `<ul id="list" class="w-9/12 border-l border-r border-b border-gray-400 rounded"></ul>`;
+    let ul = document.getElementById('list')!;
+
     // Spotify
 
     let spotifyToken = await getSpotifyToken();
@@ -104,6 +107,7 @@ const search = async () => {
         });
 
         let response = await request.json();
+        // console.log(response.tracks.items);
         return response.tracks.items;
     }
 
@@ -111,9 +115,37 @@ const search = async () => {
         songTitle = songs[i];
         let artistName = artists[i];
         let spotifyResults = await searchSpotify();
+        
+        
+
         for (let i=0; i < spotifyResults.length; i++) {
             if (spotifyResults[i].artists[0].name.toLowerCase() === artistName.toLowerCase()) {
                 console.log(`${spotifyResults[i].artists[0].name} - ${spotifyResults[i].name}`)
+                let displayArtist = spotifyResults[i].artists[0].name;
+                let displayTitle = spotifyResults[i].name;
+                let displayAlbum = spotifyResults[i].album.name;
+                let albumCover = spotifyResults[i].album.images[2].url;
+                // create list item
+                let li = document.createElement('li');
+                // add classes
+                li.className = "list-none border-t border-gray-400"
+                // add inner html
+                li.innerHTML = `<div class="flex">
+                                    <img src="${albumCover}" />
+                                    <div>
+                                        <p>
+                                            ${displayTitle}
+                                        </p>
+                                        <p>
+                                            ${displayArtist}
+                                        </p>
+                                        <p>
+                                            ${displayAlbum}
+                                        </p>
+                                    </div>
+                                </div>`
+                // append to ul
+                ul.appendChild(li);
                 break;
             }
         }
@@ -128,11 +160,36 @@ const search = async () => {
 export const GeniusLogic = () => {
 
     return (
-        <div>
-            <input id="song-search" type="text" />
-            <button onClick={() => search()}>Button</button>
-            <h1 id="producer-name"></h1>
+        <div className="container mx-auto">
+            <div className="flex justify-center py-3">
+                <input id="song-search" type="text" className="border-2 border-gray-200 rounded" />
+                <button onClick={() => search()} className="bg-blue-500 rounded px-4 py-2 ml-3">Search</button>
+            </div>
+            <h1 id="producer-name" className="text-3xl text-center"></h1>
+            <div id="list-container" className="flex justify-center">
+                <img src="" alt="" />
+            </div>
+            
         </div>
     )
 
 }
+
+{/* <ul id="list" className="w-6/12 border-l border-r border-b border-gray-400 rounded">
+                    <li className="list-none border-t border-gray-400">
+                        <div>
+                            <p>
+                                Track
+                            </p>
+                            <p>
+                                Artist
+                            </p>
+                            <p>
+                                Album
+                            </p>
+                        </div>
+                    </li>
+                    <li className="list-none border-t border-gray-400">
+                        Hello
+                    </li>
+                </ul> */}
