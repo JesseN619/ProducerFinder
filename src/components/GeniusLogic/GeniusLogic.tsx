@@ -85,7 +85,7 @@ const search = async () => {
 
     const listContainer = document.getElementById('list-container')!;
     console.log(listContainer);
-    listContainer.innerHTML = `<ul id="list" class="w-9/12 border-l border-r border-b border-gray-400 rounded"></ul>`;
+    listContainer.innerHTML = `<ul id="list" class="w-6/12 border-l border-r border-b border-gray-400 rounded"></ul>`;
     let ul = document.getElementById('list')!;
 
     // Spotify
@@ -107,9 +107,12 @@ const search = async () => {
         });
 
         let response = await request.json();
-        // console.log(response.tracks.items);
+        console.log(response.tracks.items);
         return response.tracks.items;
     }
+
+    const nameSection: HTMLElement = document.getElementById('producer-name') as HTMLElement
+    nameSection.innerHTML = producerName;
 
     for (let i=0; i < artists.length; i++) {
         songTitle = songs[i];
@@ -124,16 +127,16 @@ const search = async () => {
                 let displayArtist = spotifyResults[i].artists[0].name;
                 let displayTitle = spotifyResults[i].name;
                 let displayAlbum = spotifyResults[i].album.name;
-                let albumCover = spotifyResults[i].album.images[2].url;
+                let albumCover = spotifyResults[i].album.images[1].url;
                 // create list item
                 let li = document.createElement('li');
                 // add classes
                 li.className = "list-none border-t border-gray-400"
                 // add inner html
                 li.innerHTML = `<div class="flex">
-                                    <img src="${albumCover}" />
-                                    <div>
-                                        <p>
+                                    <img class="album-cover" src="${albumCover}" />
+                                    <div class="my-auto">
+                                        <p class="font-semibold">
                                             ${displayTitle}
                                         </p>
                                         <p>
@@ -143,6 +146,7 @@ const search = async () => {
                                             ${displayAlbum}
                                         </p>
                                     </div>
+                                    
                                 </div>`
                 // append to ul
                 ul.appendChild(li);
@@ -151,9 +155,6 @@ const search = async () => {
         }
     }
 
-    const nameSection: HTMLElement = document.getElementById('producer-name') as HTMLElement
-    nameSection.innerHTML = producerName;
-
 }
     
 
@@ -161,11 +162,12 @@ export const GeniusLogic = () => {
 
     return (
         <div className="container mx-auto">
-            <div className="flex justify-center py-3">
+            <div className="flex justify-center my-10">
                 <input id="song-search" type="text" className="border-2 border-gray-200 rounded" />
-                <button onClick={() => search()} className="bg-blue-500 rounded px-4 py-2 ml-3">Search</button>
+                <button onClick={() => search()} className="bg-blue-400 rounded px-3 py-1 ml-3">Search</button>
             </div>
-            <h1 id="producer-name" className="text-3xl text-center"></h1>
+            <h2 id="producer-name" className="text-3xl text-center mb-4"></h2>
+            
             <div id="list-container" className="flex justify-center">
                 <img src="" alt="" />
             </div>
@@ -174,22 +176,3 @@ export const GeniusLogic = () => {
     )
 
 }
-
-{/* <ul id="list" className="w-6/12 border-l border-r border-b border-gray-400 rounded">
-                    <li className="list-none border-t border-gray-400">
-                        <div>
-                            <p>
-                                Track
-                            </p>
-                            <p>
-                                Artist
-                            </p>
-                            <p>
-                                Album
-                            </p>
-                        </div>
-                    </li>
-                    <li className="list-none border-t border-gray-400">
-                        Hello
-                    </li>
-                </ul> */}
