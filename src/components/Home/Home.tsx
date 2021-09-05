@@ -15,11 +15,14 @@ interface Props{
 
 export const Home = ( props:Props) => {
     return (
-        <div>
+        <div className="container mx-auto">
             <h1 className="text-center text-5xl my-3 font-medium">ProducerFinder</h1>
             <Authorization />
             <SpotifyExample />
-            <GeniusLogic />
+            <div className="flex">
+                <GeniusLogic />
+                <Playlist />
+            </div>
         </div>
     )
 }

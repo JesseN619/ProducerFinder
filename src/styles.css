@@ -3,9 +3,18 @@
 @tailwind utilities;
 
 .album-cover {
-    padding: 5px;
-    width: 90px;
-    height: 90px;
+    padding: 2px;
+    margin-right: 8px;
+    width: 64px;
+    max-width: 64px;
+    min-width: 64px;
+    height: 64px;
+    max-height: 64px;
+    min-height: 64px;
+}
+
+.add-button {
+  /* align-self: flex-start; */
 }
 
 .column {

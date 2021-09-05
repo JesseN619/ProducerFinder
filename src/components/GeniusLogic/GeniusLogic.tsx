@@ -85,7 +85,7 @@ const search = async () => {
 
     const listContainer = document.getElementById('list-container')!;
     console.log(listContainer);
-    listContainer.innerHTML = `<ul id="list" class="w-6/12 border-l border-r border-b border-gray-400 rounded"></ul>`;
+    listContainer.innerHTML = `<ul id="list" class="border-l border-r border-b border-gray-400 rounded"></ul>`;
     let ul = document.getElementById('list')!;
 
     // Spotify
@@ -127,26 +127,26 @@ const search = async () => {
                 let displayArtist = spotifyResults[i].artists[0].name;
                 let displayTitle = spotifyResults[i].name;
                 let displayAlbum = spotifyResults[i].album.name;
-                let albumCover = spotifyResults[i].album.images[1].url;
+                let albumCover = spotifyResults[i].album.images[2].url;
                 // create list item
                 let li = document.createElement('li');
                 // add classes
                 li.className = "list-none border-t border-gray-400"
                 // add inner html
-                li.innerHTML = `<div class="flex">
-                                    <img class="album-cover" src="${albumCover}" />
-                                    <div class="my-auto">
-                                        <p class="font-semibold">
+                li.innerHTML = `<div class="flex items-center">
+                                    <img class="album-cover my-auto" src="${albumCover}" />
+                                    <div class="my-auto text-sm">
+                                        <p class="font-semibold p-0 m-0">
                                             ${displayTitle}
                                         </p>
-                                        <p>
+                                        <p class="p-0 m-0">
                                             ${displayArtist}
                                         </p>
-                                        <p>
+                                        <p class="p-0 m-0">
                                             ${displayAlbum}
                                         </p>
                                     </div>
-                                    
+                                    <button class="add-btn bg-blue-400 px-3 py-1 rounded ml-auto mr-3">+</button>
                                 </div>`
                 // append to ul
                 ul.appendChild(li);
@@ -161,8 +161,8 @@ const search = async () => {
 export const GeniusLogic = () => {
 
     return (
-        <div className="container mx-auto">
-            <div className="flex justify-center my-10">
+        <div className="w-6/12 mx-auto">
+            <div className="flex justify-center my-10 mx-auto">
                 <input id="song-search" type="text" className="border-2 border-gray-200 rounded" />
                 <button onClick={() => search()} className="bg-blue-400 rounded px-3 py-1 ml-3">Search</button>
             </div>
