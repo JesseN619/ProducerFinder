@@ -6,12 +6,14 @@ import {
 
 interface SpotifyExampleState {
   displayName: string,
-  product: string
+  product: string,
+  userId: string
 }
 
 const initialState: SpotifyExampleState = {
   displayName: '',
   product: '',
+  userId: ''
 };
 
 export const spotifyexampleSlice = createSlice({
@@ -24,13 +26,17 @@ export const spotifyexampleSlice = createSlice({
     setProduct: (state, action: PayloadAction<string>) => {
       state.product = action.payload;
     },
+    setUserId: (state, action: PayloadAction<string>) => {
+      state.userId = action.payload;
+    },
   },
 });
 
-export const { setDisplayName, setProduct } = spotifyexampleSlice.actions;
+export const { setDisplayName, setProduct, setUserId } = spotifyexampleSlice.actions;
 
 export const selectDisplayName = (state: RootState) => state.spotifyExample.displayName;
 export const selectProduct = (state: RootState) => state.spotifyExample.product;
+export const selectUserId = (state: RootState) => state.spotifyExample.userId;
 
 export const setUserProfileAsync = (accessToken: string): AppThunk => dispatch => {
   const myHeaders = new Headers();
@@ -44,6 +50,7 @@ export const setUserProfileAsync = (accessToken: string): AppThunk => dispatch =
       console.log(data);
       dispatch(setDisplayName(data.display_name ? data.display_name : data.id));
       dispatch(setProduct(data.product));
+      dispatch(setUserId(data.id));
     }).catch((error) => {
       console.log(error);
       if (error instanceof XMLHttpRequest) {
