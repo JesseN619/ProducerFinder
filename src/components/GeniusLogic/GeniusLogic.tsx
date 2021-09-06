@@ -101,7 +101,7 @@ export const GeniusLogic = () => {
         let spotifyToken = await getSpotifyToken();
     
         let headers = new Headers([
-            ['Content-Type', 'applications/json'],
+            ['Content-Type', 'application/json'],
             ['Accept', 'application/json'],
             ['Authorization', `Bearer ${spotifyToken}`]
         ]);
@@ -137,11 +137,9 @@ export const GeniusLogic = () => {
                     let displayAlbum = spotifyResults[i].album.name;
                     let albumCover = spotifyResults[i].album.images[2].url;
                     let songId = spotifyResults[i].id;
-                    // create list item
+
                     let li = document.createElement('li');
-                    // add classes
                     li.className = "list-none border-t border-gray-400 flex items-center";
-                    // add inner html
                     li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
                                         <div class="my-auto text-sm">
                                             <p class="font-semibold p-0 m-0">
