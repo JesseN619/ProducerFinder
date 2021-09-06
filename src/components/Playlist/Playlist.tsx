@@ -1,15 +1,14 @@
 import { selectPlaylistName, selectPlaylistId } from "../CreatePlaylist/createPlaylistSlice";
-import { selectSongId } from "../GeniusLogic/SongIdSlice";
+import { selectAddSongId } from "../GeniusLogic/AddSongIdSlice";
 import { selectAccessToken } from '../../features/authorization/authorizationSlice';
 import { useEffect } from "react";
 import { useSelector } from 'react-redux';
-import { isConstructorDeclaration } from "typescript";
 
 export const Playlist = () => {
     let accessToken = useSelector(selectAccessToken);
     let playlistId = useSelector(selectPlaylistId);
     let playlistName = useSelector(selectPlaylistName);
-    let songId = useSelector(selectSongId);
+    let songId = useSelector(selectAddSongId);
 
     const ul = document.getElementById('playlist-ul')!;
 
@@ -24,6 +23,10 @@ export const Playlist = () => {
             ['Accept', 'application/json'],
             ['Authorization', `Bearer ${accessToken}`]
         ]);
+
+        const removeFromPlaylist = async () => {
+
+        }
 
         const addToPlaylist = async () => {
             let playlistNameInput = (document.getElementById("playlist-name-input") as HTMLInputElement)

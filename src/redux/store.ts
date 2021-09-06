@@ -2,14 +2,14 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import authorizationReducer from '../features/authorization/authorizationSlice';
 import spotifyExampleReducer from '../features/spotifyExample/spotifyExampleSlice';
 import playlistReducer from '../components/CreatePlaylist/createPlaylistSlice';
-import songIdReducer from '../components/GeniusLogic/SongIdSlice';
+import addSongIdReducer from '../components/GeniusLogic/AddSongIdSlice';
 
 export const store = configureStore({
   reducer: {
     authorization: authorizationReducer,
     spotifyExample: spotifyExampleReducer,
     playlist: playlistReducer,
-    songId: songIdReducer,
+    addSongId: addSongIdReducer,
   },
 });
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSongId } from './SongIdSlice';
+import { setAddSongId } from './AddSongIdSlice';
 
 const geniusToken = process.env.REACT_APP_GENIUS_ACCESS_TOKEN;
 const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
@@ -9,7 +9,7 @@ const clientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
 export const GeniusLogic = () => {
     const dispatch = useDispatch();
     const storeSongId = (songId:string) => {
-        dispatch(setSongId(songId));
+        dispatch(setAddSongId(songId));
     }
 
     const getSpotifyToken = async () => {
