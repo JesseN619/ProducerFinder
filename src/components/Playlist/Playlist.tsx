@@ -1,16 +1,13 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectAccessToken } from '../../features/authorization/authorizationSlice';
 import { selectUserId } from '../../features/spotifyExample/spotifyExampleSlice';
-
-const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
-const clientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
-
-
+import { setPlaylistName, setPlaylistId } from './playlistSlice';
 
 export const Playlist = () => {
     const accessToken = useSelector(selectAccessToken);
     const userId = useSelector(selectUserId);
+    const dispatch = useDispatch();
 
     const createPlaylist = async () => {
         let playlistNameInput = (document.getElementById("playlist-name-input") as HTMLInputElement)
@@ -22,7 +19,7 @@ export const Playlist = () => {
         const result = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`,{
             method: 'POST',
             // body: `{\"name\":${playlistName},\"public\":true}`,
-            body: "{\"name\":\"1234\",\"public\":true}",
+            body: "{\"name\":\"12345\",\"public\":true}",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -31,6 +28,9 @@ export const Playlist = () => {
         });
         const data = await result.json();
         console.log(data)
+        console.log(data.id)
+        dispatch(setPlaylistId(data.id));
+        dispatch(setPlaylistName(data.name));
         return data
     };
 
