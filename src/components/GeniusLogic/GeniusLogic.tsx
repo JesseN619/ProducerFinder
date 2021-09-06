@@ -101,7 +101,7 @@ const search = async () => {
     let songTitle = '';
 
     const searchSpotify = async () => {
-        let request = await fetch(`https://api.spotify.com/v1/search?q=${songTitle}&type=track&market=US`,{
+        let request = await fetch(`https://api.spotify.com/v1/search?q=${songTitle}&type=track&market=US&limit=5`,{
             method: 'GET',
             headers: headers
         });
@@ -113,6 +113,10 @@ const search = async () => {
 
     const nameSection: HTMLElement = document.getElementById('producer-name') as HTMLElement
     nameSection.innerHTML = producerName;
+
+    const logSongId = (songId:string) => {
+        console.log(songId)
+    }
 
     for (let i=0; i < artists.length; i++) {
         songTitle = songs[i];
@@ -128,13 +132,13 @@ const search = async () => {
                 let displayTitle = spotifyResults[i].name;
                 let displayAlbum = spotifyResults[i].album.name;
                 let albumCover = spotifyResults[i].album.images[2].url;
+                let songId = spotifyResults[i].id;
                 // create list item
                 let li = document.createElement('li');
                 // add classes
-                li.className = "list-none border-t border-gray-400"
+                li.className = "list-none border-t border-gray-400 flex items-center";
                 // add inner html
-                li.innerHTML = `<div class="flex items-center">
-                                    <img class="album-cover my-auto" src="${albumCover}" />
+                li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
                                     <div class="my-auto text-sm">
                                         <p class="font-semibold p-0 m-0">
                                             ${displayTitle}
@@ -145,10 +149,12 @@ const search = async () => {
                                         <p class="p-0 m-0">
                                             ${displayAlbum}
                                         </p>
-                                    </div>
-                                    <button class="add-btn bg-blue-400 px-3 py-1 rounded ml-auto mr-3">+</button>
-                                </div>`
-                // append to ul
+                                    </div>`
+                let btn = document.createElement('button');
+                btn.className = "add-btn bg-blue-400 px-3 py-1 rounded ml-auto mr-3";
+                btn.innerHTML = '+';
+                btn.addEventListener('click', () => logSongId(songId))
+                li.appendChild(btn);
                 ul.appendChild(li);
                 break;
             }
@@ -156,14 +162,19 @@ const search = async () => {
     }
 
 }
-    
+
+{/* <button onclick="() => logTitle()" class="add-btn bg-blue-400 px-3 py-1 rounded ml-auto mr-3">+</button> */}
+ 
+
 
 export const GeniusLogic = () => {
+
+    
 
     return (
         <div className="w-6/12 mx-auto">
             <div className="flex justify-center my-10 mx-auto">
-                <input id="song-search" type="text" className="border-2 border-gray-200 rounded" />
+                <input id="song-search" type="text" placeholder="Song/Artist" className="border-2 border-gray-200 rounded" />
                 <button onClick={() => search()} className="bg-blue-400 rounded px-3 py-1 ml-3">Search</button>
             </div>
             <h2 id="producer-name" className="text-3xl text-center mb-4"></h2>

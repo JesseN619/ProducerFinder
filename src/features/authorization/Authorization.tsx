@@ -42,7 +42,7 @@ export function Authorization() {
           >
           Log in with Spotify
           </button>}
-        {isLoggedIn && <div className="auth-row">Token expiry date: {tokenExpiryDate}</div>}
+        {/* {isLoggedIn && <div className="auth-row">Token expiry date: {tokenExpiryDate}</div>} */}
       </div>
     </div>
   );

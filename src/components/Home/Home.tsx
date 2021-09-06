@@ -1,7 +1,7 @@
 import React from 'react';
 // import { getSongId, getProducerId, getTopSongs } from '../GeniusLogic';
 import { GeniusLogic } from '../../components';
-import { Playlist } from '../Playlist';
+import { CreatePlaylist } from '../CreatePlaylist';
 import { Authorization } from '../../features/authorization/Authorization';
 import { SpotifyExample } from '../../features/spotifyExample/spotifyExample';
 
@@ -21,7 +21,7 @@ export const Home = ( props:Props) => {
             <SpotifyExample />
             <div className="flex">
                 <GeniusLogic />
-                <Playlist />
+                <CreatePlaylist />
             </div>
         </div>
     )

@@ -12,12 +12,12 @@ export function SpotifyExample() {
       {displayName && <div className="row">
         Logged in as: {displayName}
       </div>}
-      {product && <div className="row">
+      {/* {product && <div className="row">
         Subscription type: {product}
       </div>}
       {userId && <div className="row">
         User ID: {userId}
-      </div>}
+      </div>} */}
     </div>
   );
 }
