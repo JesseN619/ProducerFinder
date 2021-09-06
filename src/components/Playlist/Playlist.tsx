@@ -12,22 +12,28 @@ export const Playlist = () => {
 
     const ul = document.getElementById('playlist-ul')!;
 
+    let headers = new Headers([
+        ['Content-Type', 'application/json'],
+        ['Accept', 'application/json'],
+        ['Authorization', `Bearer ${accessToken}`]
+    ]);
+
     useEffect(() => {
         const playlistDisplayName = document.getElementById('playlist-name')!;
         playlistDisplayName.innerHTML = playlistName;
     }, [playlistId])
 
+    const removeFromPlaylist = async (songId:string) => {
+        const result = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`,{
+                method: 'DELETE',
+                body: "{\"tracks\":[{\"uri\":\"spotify:track:7KXjTSCq5nL1LoYtL7XAwS\"}]}",
+                headers: headers
+            });
+            const data = await result.json();
+            console.log(data)
+    }
+
     useEffect(() => {
-        let headers = new Headers([
-            ['Content-Type', 'application/json'],
-            ['Accept', 'application/json'],
-            ['Authorization', `Bearer ${accessToken}`]
-        ]);
-
-        const removeFromPlaylist = async () => {
-
-        }
-
         const addToPlaylist = async () => {
             let playlistNameInput = (document.getElementById("playlist-name-input") as HTMLInputElement)
             console.log(playlistNameInput);
@@ -35,6 +41,7 @@ export const Playlist = () => {
             console.log(playlistName);
             console.log(accessToken);
 
+            // Add song to playlist in Spotify database
             const result = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?uris=spotify:track:${songId}`,{
                 method: 'POST',
                 headers: headers
@@ -42,6 +49,7 @@ export const Playlist = () => {
             const data = await result.json();
             console.log(data)
 
+            // Retrieve info for that song
             const request = await fetch(`https://api.spotify.com/v1/tracks/${songId}?market=US`,{
                     method: 'GET',
                     headers: headers
@@ -74,7 +82,7 @@ export const Playlist = () => {
             let btn = document.createElement('button');
             btn.className = "add-btn bg-red-400 px-3 py-1 rounded ml-auto mr-3";
             btn.innerHTML = 'x';
-            // btn.addEventListener('click', () => storeSongId(songId))
+            btn.addEventListener('click', () => removeFromPlaylist(songId))
             li.appendChild(btn);
             ul.appendChild(li);
         };

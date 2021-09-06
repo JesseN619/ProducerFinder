@@ -19,7 +19,7 @@ export const CreatePlaylist = () => {
         console.log(accessToken);
         const result = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`,{
             method: 'POST',
-            // body: `{\"name\":${playlistName},\"public\":true}`,
+            // body: `{"name":${playlistName},"public":true}`,
             body: "{\"name\":\"hello\",\"public\":true}",
             headers: {
                 'Accept': 'application/json',
