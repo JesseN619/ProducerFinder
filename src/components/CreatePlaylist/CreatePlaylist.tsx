@@ -2,25 +2,23 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAccessToken } from '../../features/authorization/authorizationSlice';
 import { selectUserId } from '../../features/spotifyExample/spotifyExampleSlice';
-import { setPlaylistName, setPlaylistId } from './createPlaylistSlice';
+import { setPlaylistName, setPlaylistId, selectPlaylistName } from './createPlaylistSlice';
 import { Playlist } from '../Playlist';
 
 export const CreatePlaylist = () => {
     const accessToken = useSelector(selectAccessToken);
     const userId = useSelector(selectUserId);
+    const playlistName = useSelector(selectPlaylistName);
     const dispatch = useDispatch();
 
     const createPlaylist = async () => {
-        let playlistNameInput = (document.getElementById("playlist-name-input") as HTMLInputElement)
-        console.log(playlistNameInput);
-        let playlistName = playlistNameInput.value;
-        console.log(playlistName);
+        console.log(typeof(playlistName));
+        console.log(`playlist name: ${playlistName}`);
 
         console.log(accessToken);
         const result = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`,{
             method: 'POST',
-            // body: `{"name":${playlistName},"public":true}`,
-            body: "{\"name\":\"hello\",\"public\":true}",
+            body: `{"name":"${playlistName}","public":true}`,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -31,7 +29,6 @@ export const CreatePlaylist = () => {
         console.log(data)
         console.log(data.id)
         dispatch(setPlaylistId(data.id));
-        dispatch(setPlaylistName(data.name));
         return data
     };
 
@@ -40,15 +37,10 @@ export const CreatePlaylist = () => {
             <h2 className="text-center">Create Spotify Playlist</h2>
             <div className="flex justify-center my-10 mx-auto">
                 <div>
-                    <input id="playlist-name-input" type="text" placeholder="Playlist Name" className="border-2 border-gray-200 rounded" />
-                    <button onClick={() => createPlaylist()} className="bg-blue-400 rounded px-3 py-1 ml-3">Create</button>
+                        <input onChange={e => dispatch(setPlaylistName(e.target.value))} id="playlist-name-input" type="text" placeholder="Playlist Name" className="border-2 border-gray-200 rounded" />
+                        <button onClick={createPlaylist} className="bg-blue-400 rounded px-3 py-1 ml-3">Create</button>
                 </div>
             </div>
-            <h2 id="producer-name" className="text-3xl text-center mb-4"></h2>
-            
-            {/* <div id="list-container" className="flex justify-center">
-                <img src="" alt="" />
-            </div> */}
             <Playlist />
         </div>
     )

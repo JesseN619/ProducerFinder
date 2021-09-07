@@ -23,14 +23,14 @@ export const Playlist = () => {
         playlistDisplayName.innerHTML = playlistName;
     }, [playlistId])
 
-    const removeFromPlaylist = async (songId:string) => {
-        const result = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`,{
-                method: 'DELETE',
-                body: "{\"tracks\":[{\"uri\":\"spotify:track:7KXjTSCq5nL1LoYtL7XAwS\"}]}",
-                headers: headers
-            });
-            const data = await result.json();
-            console.log(data)
+    const removeFromPlaylist = async (e: MouseEvent, songId:string) => {
+        await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`,{
+            method: 'DELETE',
+            body: `{\"tracks\":[{\"uri\":\"spotify:track:${songId}\"}]}`,
+            headers: headers
+        });
+        let li1 = (e.target as Element).parentNode;
+        (li1 as Element).remove();
     }
 
     useEffect(() => {
@@ -82,7 +82,7 @@ export const Playlist = () => {
             let btn = document.createElement('button');
             btn.className = "add-btn bg-red-400 px-3 py-1 rounded ml-auto mr-3";
             btn.innerHTML = 'x';
-            btn.addEventListener('click', () => removeFromPlaylist(songId))
+            btn.addEventListener('click', (e) => removeFromPlaylist(e, songId))
             li.appendChild(btn);
             ul.appendChild(li);
         };
@@ -97,7 +97,7 @@ export const Playlist = () => {
 
     return (
         <div className="w-6/12 mx-auto">
-            <h2 id="playlist-name" className="text-3xl text-center mb-4"></h2>
+            <h2 id="playlist-name" className="text-3xl text-center mb-4">{useSelector(selectPlaylistName)}</h2>
             <ul id="playlist-ul" className="border-l border-r border-b border-gray-400 rounded"></ul>
         </div>
     )
