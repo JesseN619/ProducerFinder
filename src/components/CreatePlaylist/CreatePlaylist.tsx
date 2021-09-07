@@ -34,11 +34,12 @@ export const CreatePlaylist = () => {
 
     return (
         <div className="w-6/12 mx-auto">
-            <h2 className="text-center">Create Spotify Playlist</h2>
             <div className="flex justify-center my-10 mx-auto">
                 <div>
-                        <input onChange={e => dispatch(setPlaylistName(e.target.value))} id="playlist-name-input" type="text" placeholder="Playlist Name" className="border-2 border-gray-200 rounded" />
-                        <button onClick={createPlaylist} className="bg-blue-400 rounded px-3 py-1 ml-3">Create</button>
+                    <h2 className="text-center">Create Spotify Playlist</h2>
+                    <input onChange={e => dispatch(setPlaylistName(e.target.value))} id="playlist-name-input" type="text" placeholder="Playlist Name" className="border-2 border-gray-200 rounded" />
+                    <button onClick={createPlaylist} className="bg-blue-400 rounded px-3 py-1 ml-3">Create</button>
+                    <p className="text-center">- or -</p>
                 </div>
             </div>
             <Playlist />

@@ -31,9 +31,7 @@ export const GeniusLogic = () => {
         const getSongId = async () => {
     
             let searchBox = (document.getElementById("song-search") as HTMLInputElement)
-            console.log(searchBox);
             let searchValue = searchBox.value;
-            console.log(searchValue);
     
             let request = await fetch(`https://api.genius.com/search?q=${searchValue}&access_token=${geniusToken}`, {
                 method: 'GET',
@@ -46,7 +44,7 @@ export const GeniusLogic = () => {
         }
     
         let songId = await getSongId();
-        console.log(`Song ID: ${songId}`);
+        // console.log(`Song ID: ${songId}`);
     
         const getProducerId = async () => {
             let request = await fetch(`https://api.genius.com/songs/${songId}?access_token=${geniusToken}`, {
@@ -63,8 +61,8 @@ export const GeniusLogic = () => {
         let producerInfo = await getProducerId();
         let producerId = producerInfo[0];
         let producerName = producerInfo[1];
-        console.log(`Producer ID: ${producerId}`);
-        console.log(`Producer Name: ${producerName}`);
+        // console.log(`Producer ID: ${producerId}`);
+        // console.log(`Producer Name: ${producerName}`);
     
         const getTopSongs = async () => {
             let request = await fetch(`https://api.genius.com/artists/${producerId}/songs?sort=popularity&access_token=${geniusToken}`, {
@@ -92,8 +90,7 @@ export const GeniusLogic = () => {
         let songs = topSongs[1];
     
         const listContainer = document.getElementById('list-container')!;
-        console.log(listContainer);
-        listContainer.innerHTML = `<ul id="list" class="border-l border-r border-b border-gray-400 rounded"></ul>`;
+        listContainer.innerHTML = `<ul id="list"></ul>`;
         let ul = document.getElementById('list')!;
     
         // Spotify
@@ -115,8 +112,12 @@ export const GeniusLogic = () => {
             });
     
             let response = await request.json();
-            console.log(response.tracks.items);
+            // console.log(response.tracks.items);
             return response.tracks.items;
+        }
+
+        const playPreview = (preview:string) => {
+            console.log(preview);
         }
     
         const nameSection: HTMLElement = document.getElementById('producer-name') as HTMLElement
@@ -126,20 +127,32 @@ export const GeniusLogic = () => {
             songTitle = songs[i];
             let artistName = artists[i];
             let spotifyResults = await searchSpotify();
-            
-            
     
             for (let i=0; i < spotifyResults.length; i++) {
                 if (spotifyResults[i].artists[0].name.toLowerCase() === artistName.toLowerCase()) {
-                    console.log(`${spotifyResults[i].artists[0].name} - ${spotifyResults[i].name}`)
-                    let displayArtist = spotifyResults[i].artists[0].name;
-                    let displayTitle = spotifyResults[i].name;
-                    let displayAlbum = spotifyResults[i].album.name;
-                    let albumCover = spotifyResults[i].album.images[2].url;
                     let songId = spotifyResults[i].id;
 
+                    // Get song by songId to get preview URLs (search does not have preview URLs for most songs)
+                    let trackRequest = await fetch(`https://api.spotify.com/v1/tracks/${songId}?market=US`,{
+                        method: 'GET',
+                        headers: headers
+                    });
+                    let trackInfo = await trackRequest.json();
+                    console.log(trackInfo);
+
+                    // console.log(`${spotifyResults[i].artists[0].name} - ${spotifyResults[i].name}`)
+                    // let displayArtist = spotifyResults[i].artists[0].name;
+                    // let displayTitle = spotifyResults[i].name;
+                    // let displayAlbum = spotifyResults[i].album.name;
+                    // let albumCover = spotifyResults[i].album.images[2].url;
+                    let displayArtist = trackInfo.artists[0].name;
+                    let displayTitle = trackInfo.name;
+                    let displayAlbum = trackInfo.album.name;
+                    let albumCover = trackInfo.album.images[2].url;
+                    songId = trackInfo.id;
+
                     let li = document.createElement('li');
-                    li.className = "list-none border-t border-gray-400 flex items-center";
+                    li.className = "list-none flex items-center my-3";
                     li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
                                         <div class="my-auto text-sm">
                                             <p class="font-semibold p-0 m-0">
@@ -152,11 +165,21 @@ export const GeniusLogic = () => {
                                                 ${displayAlbum}
                                             </p>
                                         </div>`
-                    let btn = document.createElement('button');
-                    btn.className = "add-btn bg-blue-400 px-3 py-1 rounded ml-auto mr-3";
-                    btn.innerHTML = '+';
-                    btn.addEventListener('click', () => storeSongId(songId))
-                    li.appendChild(btn);
+
+                    if (trackInfo.preview_url) {
+                        let preview = trackInfo.preview_url;
+                        let previewBtn = document.createElement('button');
+                        previewBtn.className = "add-btn bg-blue-400 px-3 py-1 rounded ml-auto mr-3";
+                        previewBtn.innerHTML = '+';
+                        previewBtn.addEventListener('click', () => playPreview(preview))
+                        li.appendChild(previewBtn);
+                    }
+                    
+                    let addBtn = document.createElement('button');
+                    addBtn.className = "add-btn bg-blue-400 px-3 py-1 rounded ml-auto mr-3";
+                    addBtn.innerHTML = '+';
+                    addBtn.addEventListener('click', () => storeSongId(songId))
+                    li.appendChild(addBtn);
                     ul.appendChild(li);
                     break;
                 }

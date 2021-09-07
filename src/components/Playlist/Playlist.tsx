@@ -66,7 +66,7 @@ export const Playlist = () => {
             let albumCover = spotifyResults.album.images[2].url;
 
             let li = document.createElement('li');
-            li.className = "list-none border-t border-gray-400 flex items-center";
+            li.className = "list-none flex items-center my-3";
             li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
                                 <div class="my-auto text-sm">
                                     <p class="font-semibold p-0 m-0">
@@ -79,11 +79,19 @@ export const Playlist = () => {
                                         ${displayAlbum}
                                     </p>
                                 </div>`
-            let btn = document.createElement('button');
-            btn.className = "add-btn bg-red-400 px-3 py-1 rounded ml-auto mr-3";
-            btn.innerHTML = 'x';
-            btn.addEventListener('click', (e) => removeFromPlaylist(e, songId))
-            li.appendChild(btn);
+            // replace btn
+            // let replaceBtn = document.createElement('button');
+            // replaceBtn.className = "add-btn bg-yellow-400 px-3 py-1 rounded ml-auto mr-3";
+            // replaceBtn.innerHTML = 'x';
+            // replaceBtn.addEventListener('click', (e) => replace(e, songId))
+            // li.appendChild(replaceBtn);
+
+            // delete btn
+            let delBtn = document.createElement('button');
+            delBtn.className = "add-btn bg-red-400 px-3 py-1 rounded ml-auto mr-3";
+            delBtn.innerHTML = 'x';
+            delBtn.addEventListener('click', (e) => removeFromPlaylist(e, songId))
+            li.appendChild(delBtn);
             ul.appendChild(li);
         };
 
@@ -97,8 +105,10 @@ export const Playlist = () => {
 
     return (
         <div className="w-6/12 mx-auto">
+            <h2 className="text-center">Choose Existing Playlist</h2>
             <h2 id="playlist-name" className="text-3xl text-center mb-4">{useSelector(selectPlaylistName)}</h2>
-            <ul id="playlist-ul" className="border-l border-r border-b border-gray-400 rounded"></ul>
+            <ul id="playlist-ul"></ul>
+            {/* <ul id="playlist-ul" className="border-l border-r border-b border-gray-400 rounded"></ul> */}
         </div>
     )
 }

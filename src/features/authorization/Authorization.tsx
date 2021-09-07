@@ -31,10 +31,6 @@ export function Authorization() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const url = 'https://accounts.spotify.com/en/logout'                                                                                                                                                                                                                                                                               
-  // const spotifyLogoutWindow = window.open(url, 'Spotify Logout', 'width=700,height=500,top=40,left=40')                                                                                                
-  // setTimeout(() => spotifyLogoutWindow!.close(), 2000)
-
   return (
     <div>
       <div className="auth-row">
