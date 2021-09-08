@@ -10,7 +10,7 @@ interface PlaylistsObject {
     [key: string]: string
 }
 
-const userPlaylists: PlaylistsObject = {'Select Playlist': ''};
+const userPlaylists: PlaylistsObject = {'': 'Select Playlist'};
 
 export const CreatePlaylist = () => {
     const accessToken = useSelector(selectAccessToken);
@@ -51,19 +51,22 @@ export const CreatePlaylist = () => {
                 let aPlaylistName: string = arrOfPlaylists[i].name;
                 // need id to get tracks in playlist
                 let aPlaylistId: string = arrOfPlaylists[i].id;
-                userPlaylists[aPlaylistName] = aPlaylistId;
+                userPlaylists[aPlaylistId] = aPlaylistName;
             }  
         }
         console.log(userPlaylists);
         let select = document.createElement('select');
         for (let [k,v] of Object.entries(userPlaylists)) {
             let option = document.createElement('option');
-            option.value = v;
-            option.innerText = k;
+            option.value = k;
+            option.innerText = v;
             select.appendChild(option);
         }
         document.getElementById('create-container')?.appendChild(select);
-        select.addEventListener('change', (e) => dispatch(setPlaylistId((e.target as HTMLSelectElement)!.value!)));
+        select.addEventListener('change', (e) => {
+            dispatch(setPlaylistId((e.target as HTMLSelectElement)!.value!));
+            dispatch(setPlaylistName(userPlaylists[(e.target as HTMLSelectElement)!.value!]));
+        });
         
     }
 
