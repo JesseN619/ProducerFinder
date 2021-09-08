@@ -12,10 +12,6 @@ export const CreatePlaylist = () => {
     const dispatch = useDispatch();
 
     const createPlaylist = async () => {
-        console.log(typeof(playlistName));
-        console.log(`playlist name: ${playlistName}`);
-
-        console.log(accessToken);
         const result = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`,{
             method: 'POST',
             body: `{"name":"${playlistName}","public":true}`,
@@ -26,9 +22,9 @@ export const CreatePlaylist = () => {
             },
         });
         const data = await result.json();
-        console.log(data)
-        console.log(data.id)
         dispatch(setPlaylistId(data.id));
+        (document.getElementById("playlist-name-input") as HTMLInputElement).value = '';
+        document.getElementById("success")!.className = "bg-green-300 border-green-700 p-3";
         return data
     };
 
@@ -39,7 +35,9 @@ export const CreatePlaylist = () => {
                     <h2 className="text-center">Create Spotify Playlist</h2>
                     <input onChange={e => dispatch(setPlaylistName(e.target.value))} id="playlist-name-input" type="text" placeholder="Playlist Name" className="border-2 border-gray-200 rounded" />
                     <button onClick={createPlaylist} className="bg-blue-400 rounded px-3 py-1 ml-3">Create</button>
+                    <p id="success" className="hidden bg-green-300 border-green-700 p-3">Playlist Created</p>
                     <p className="text-center">- or -</p>
+
                 </div>
             </div>
             <Playlist />

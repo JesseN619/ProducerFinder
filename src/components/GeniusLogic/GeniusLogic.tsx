@@ -6,6 +6,21 @@ const geniusToken = process.env.REACT_APP_GENIUS_ACCESS_TOKEN;
 const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
 
+let playSong: HTMLAudioElement;
+const stopSong = () => {
+    playSong.pause();
+    playSong.currentTime = 0;
+}
+
+const playPreview = (e: MouseEvent, preview:string) => {
+    if (playSong) {
+        stopSong();
+    }
+    playSong = new Audio(preview);
+    // (e.target as Element).removeEventListener('click', playPreview);
+    return playSong.play()
+}
+
 export const GeniusLogic = () => {
     const dispatch = useDispatch();
     const storeSongId = (songId:string) => {
@@ -38,13 +53,11 @@ export const GeniusLogic = () => {
             });
     
             let response = await request.json();
-            // TODO: instead of hits[0], show dropdown of top hits and let user choose
             let songId = response.response.hits[0].result.id;
             return songId;
         }
     
         let songId = await getSongId();
-        // console.log(`Song ID: ${songId}`);
     
         const getProducerId = async () => {
             let request = await fetch(`https://api.genius.com/songs/${songId}?access_token=${geniusToken}`, {
@@ -61,8 +74,6 @@ export const GeniusLogic = () => {
         let producerInfo = await getProducerId();
         let producerId = producerInfo[0];
         let producerName = producerInfo[1];
-        // console.log(`Producer ID: ${producerId}`);
-        // console.log(`Producer Name: ${producerName}`);
     
         const getTopSongs = async () => {
             let request = await fetch(`https://api.genius.com/artists/${producerId}/songs?sort=popularity&access_token=${geniusToken}`, {
@@ -114,30 +125,18 @@ export const GeniusLogic = () => {
             let response = await request.json();
             // console.log(response.tracks.items);
             return response.tracks.items;
-        }
-
-        let playSong: HTMLAudioElement;
-        const stopSong = () => {
-            playSong.pause();
-            playSong.currentTime = 0;
-        }
-
-        const playPreview = (preview:string) => {
-            if (playSong) {
-                stopSong();
-            }
-            playSong = new Audio(preview);
-            return playSong.play()
-        }
+        }    
     
         const nameSection: HTMLElement = document.getElementById('producer-name') as HTMLElement
         nameSection.innerHTML = producerName;
     
+        // loop through producer's top songs
         for (let i=0; i < artists.length; i++) {
             songTitle = songs[i];
             let artistName = artists[i];
             let spotifyResults = await searchSpotify();
     
+            // loop through Spotify search results for song's title
             for (let i=0; i < spotifyResults.length; i++) {
                 if (spotifyResults[i].artists[0].name.toLowerCase() === artistName.toLowerCase()) {
                     let songId = spotifyResults[i].id;
@@ -178,8 +177,14 @@ export const GeniusLogic = () => {
                         let previewBtn = document.createElement('button');
                         previewBtn.className = "add-btn bg-blue-400 px-2 py-1 rounded mr-3";
                         previewBtn.innerHTML = '&#9658;';
-                        previewBtn.addEventListener('click', () => playPreview(preview))
+                        previewBtn.addEventListener('click', (e) => playPreview(e, preview))
                         btnContainer.appendChild(previewBtn);
+
+                        let stopBtn = document.createElement('button');
+                        stopBtn.className = "add-btn bg-blue-400 px-2 py-1 rounded mr-3";
+                        stopBtn.innerHTML = '&#9632;';
+                        stopBtn.addEventListener('click', () => stopSong())
+                        btnContainer.appendChild(stopBtn);
                     }
                     
                     let addBtn = document.createElement('button');
