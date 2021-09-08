@@ -62,9 +62,8 @@ export const CreatePlaylist = () => {
             option.innerText = k;
             select.appendChild(option);
         }
-        
         document.getElementById('create-container')?.appendChild(select);
-        
+        select.addEventListener('change', (e) => dispatch(setPlaylistId((e.target as HTMLSelectElement)!.value!)));
         
     }
 
