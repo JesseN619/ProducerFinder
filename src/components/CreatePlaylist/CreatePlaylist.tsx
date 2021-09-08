@@ -4,6 +4,7 @@ import { selectAccessToken } from '../../features/authorization/authorizationSli
 import { selectUserId } from '../../features/spotifyExample/spotifyExampleSlice';
 import { setPlaylistName, setPlaylistId, selectPlaylistName } from './createPlaylistSlice';
 import { Playlist } from '../Playlist';
+import { useEffect } from 'react';
 
 export const CreatePlaylist = () => {
     const accessToken = useSelector(selectAccessToken);
@@ -11,15 +12,26 @@ export const CreatePlaylist = () => {
     const playlistName = useSelector(selectPlaylistName);
     const dispatch = useDispatch();
 
+    let headers = new Headers([
+        ['Content-Type', 'application/json'],
+        ['Accept', 'application/json'],
+        ['Authorization', `Bearer ${accessToken}`]
+    ]);
+
+    const getPlaylists = async () => {
+        const result = await fetch(`https://api.spotify.com/v1/me/playlists`,{
+        method: 'GET',
+        headers: headers,
+        });
+        const data = await result.json();
+        console.log(data);
+    }
+
     const createPlaylist = async () => {
         const result = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`,{
             method: 'POST',
             body: `{"name":"${playlistName}","public":true}`,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken
-            },
+            headers: headers,
         });
         const data = await result.json();
         dispatch(setPlaylistId(data.id));
@@ -27,6 +39,10 @@ export const CreatePlaylist = () => {
         document.getElementById("success")!.className = "bg-green-300 border-green-700 p-3";
         return data
     };
+
+    useEffect(() => {
+        getPlaylists()
+    }, [userId])
 
     return (
         <div className="w-6/12 mx-auto">
