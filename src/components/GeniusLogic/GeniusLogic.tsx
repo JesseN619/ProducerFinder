@@ -116,8 +116,18 @@ export const GeniusLogic = () => {
             return response.tracks.items;
         }
 
+        let playSong: HTMLAudioElement;
+        const stopSong = () => {
+            playSong.pause();
+            playSong.currentTime = 0;
+        }
+
         const playPreview = (preview:string) => {
-            console.log(preview);
+            if (playSong) {
+                stopSong();
+            }
+            playSong = new Audio(preview);
+            return playSong.play()
         }
     
         const nameSection: HTMLElement = document.getElementById('producer-name') as HTMLElement
@@ -140,11 +150,6 @@ export const GeniusLogic = () => {
                     let trackInfo = await trackRequest.json();
                     console.log(trackInfo);
 
-                    // console.log(`${spotifyResults[i].artists[0].name} - ${spotifyResults[i].name}`)
-                    // let displayArtist = spotifyResults[i].artists[0].name;
-                    // let displayTitle = spotifyResults[i].name;
-                    // let displayAlbum = spotifyResults[i].album.name;
-                    // let albumCover = spotifyResults[i].album.images[2].url;
                     let displayArtist = trackInfo.artists[0].name;
                     let displayTitle = trackInfo.name;
                     let displayAlbum = trackInfo.album.name;
@@ -166,20 +171,23 @@ export const GeniusLogic = () => {
                                             </p>
                                         </div>`
 
+                    let btnContainer = document.createElement('div');
+                    btnContainer.className = "ml-auto mr-3"
                     if (trackInfo.preview_url) {
                         let preview = trackInfo.preview_url;
                         let previewBtn = document.createElement('button');
-                        previewBtn.className = "add-btn bg-blue-400 px-3 py-1 rounded ml-auto mr-3";
-                        previewBtn.innerHTML = '+';
+                        previewBtn.className = "add-btn bg-blue-400 px-2 py-1 rounded mr-3";
+                        previewBtn.innerHTML = '&#9658;';
                         previewBtn.addEventListener('click', () => playPreview(preview))
-                        li.appendChild(previewBtn);
+                        btnContainer.appendChild(previewBtn);
                     }
                     
                     let addBtn = document.createElement('button');
-                    addBtn.className = "add-btn bg-blue-400 px-3 py-1 rounded ml-auto mr-3";
+                    addBtn.className = "add-btn bg-blue-400 px-3 py-1 rounded";
                     addBtn.innerHTML = '+';
                     addBtn.addEventListener('click', () => storeSongId(songId))
-                    li.appendChild(addBtn);
+                    btnContainer.appendChild(addBtn);
+                    li.appendChild(btnContainer);
                     ul.appendChild(li);
                     break;
                 }
