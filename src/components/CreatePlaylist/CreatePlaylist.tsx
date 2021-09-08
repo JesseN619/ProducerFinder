@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAccessToken } from '../../features/authorization/authorizationSlice';
-import { selectUserId } from '../../features/spotifyExample/spotifyExampleSlice';
+import { selectAccessToken } from '../Authorization/authorizationSlice';
+import { selectUserId } from '../User/UserSlice';
 import { setPlaylistName, setPlaylistId, selectPlaylistName } from './createPlaylistSlice';
 import { Playlist } from '../Playlist';
 import { useEffect } from 'react';

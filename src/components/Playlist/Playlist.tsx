@@ -1,6 +1,6 @@
 import { selectPlaylistName, selectPlaylistId, setPlaylistName } from "../CreatePlaylist/createPlaylistSlice";
 import { selectAddSongId } from "../GeniusLogic/AddSongIdSlice";
-import { selectAccessToken } from '../../features/authorization/authorizationSlice';
+import { selectAccessToken } from '../Authorization/authorizationSlice';
 import { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 

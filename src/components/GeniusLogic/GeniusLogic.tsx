@@ -37,21 +37,18 @@ export const GeniusLogic = () => {
             body: 'grant_type=client_credentials'
         });
         const data = await result.json();
-        // console.log(data.access_token)
         return data.access_token
     };
     
     const search = async () => {
     
         const getSongId = async () => {
-    
             let searchBox = (document.getElementById("song-search") as HTMLInputElement)
             let searchValue = searchBox.value;
     
             let request = await fetch(`https://api.genius.com/search?q=${searchValue}&access_token=${geniusToken}`, {
                 method: 'GET',
             });
-    
             let response = await request.json();
             let songId = response.response.hits[0].result.id;
             return songId;
@@ -104,7 +101,7 @@ export const GeniusLogic = () => {
         listContainer.innerHTML = `<ul id="list"></ul>`;
         let ul = document.getElementById('list')!;
     
-        // Spotify
+        // Spotify =====================================================
     
         let spotifyToken = await getSpotifyToken();
     
@@ -121,9 +118,7 @@ export const GeniusLogic = () => {
                 method: 'GET',
                 headers: headers
             });
-    
             let response = await request.json();
-            // console.log(response.tracks.items);
             return response.tracks.items;
         }    
     

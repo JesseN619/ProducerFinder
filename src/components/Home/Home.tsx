@@ -2,8 +2,8 @@ import React from 'react';
 // import { getSongId, getProducerId, getTopSongs } from '../GeniusLogic';
 import { GeniusLogic } from '../../components';
 import { CreatePlaylist } from '../CreatePlaylist';
-import { Authorization } from '../../features/authorization/Authorization';
-import { SpotifyExample } from '../../features/spotifyExample/spotifyExample';
+import { Authorization } from '../Authorization/Authorization';
+import { SpotifyExample } from '../User/User';
 
 const code = new URLSearchParams(window.location.search).get('code');
 

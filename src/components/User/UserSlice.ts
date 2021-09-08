@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../redux/store';
 import {
   setLoggedIn
-} from '../../features/authorization/authorizationSlice';
+} from '../Authorization/authorizationSlice';
 
 interface SpotifyExampleState {
   displayName: string,
