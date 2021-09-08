@@ -169,30 +169,40 @@ export const GeniusLogic = () => {
                                                 ${displayAlbum}
                                             </p>
                                         </div>`
-
+                    let allBtnContainer = document.createElement('div');
+                    allBtnContainer.className="flex ml-auto";
                     let btnContainer = document.createElement('div');
-                    btnContainer.className = "ml-auto mr-3"
+                    btnContainer.className = "flex items-center"
                     if (trackInfo.preview_url) {
                         let preview = trackInfo.preview_url;
                         let previewBtn = document.createElement('button');
-                        previewBtn.className = "add-btn bg-blue-400 px-2 py-1 rounded mr-3";
-                        previewBtn.innerHTML = '&#9658;';
+                        previewBtn.className = "text-xl mr-1";
+                        // previewBtn.innerHTML = '&#9658;';
+                        previewBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mt-auto" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                      </svg>`
                         previewBtn.addEventListener('click', (e) => playPreview(e, preview))
                         btnContainer.appendChild(previewBtn);
 
                         let stopBtn = document.createElement('button');
-                        stopBtn.className = "add-btn bg-blue-400 px-2 py-1 rounded mr-3";
-                        stopBtn.innerHTML = '&#9632;';
+                        stopBtn.className = "mr-3 text-xl";
+                        stopBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                      </svg>`;
                         stopBtn.addEventListener('click', () => stopSong())
                         btnContainer.appendChild(stopBtn);
                     }
+                    allBtnContainer.appendChild(btnContainer);
                     
+                    let addBtnContainer = document.createElement('div');
+                    addBtnContainer.className = "flex items-center";
                     let addBtn = document.createElement('button');
-                    addBtn.className = "add-btn bg-blue-400 px-3 py-1 rounded";
+                    addBtn.className = "add-btn bg-blue-400 px-2 rounded text-xl";
                     addBtn.innerHTML = '+';
                     addBtn.addEventListener('click', () => storeSongId(songId))
-                    btnContainer.appendChild(addBtn);
-                    li.appendChild(btnContainer);
+                    addBtnContainer.appendChild(addBtn);
+                    allBtnContainer.appendChild(addBtnContainer);
+                    li.appendChild(allBtnContainer);
                     ul.appendChild(li);
                     break;
                 }
