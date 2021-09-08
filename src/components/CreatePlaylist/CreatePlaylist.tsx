@@ -6,6 +6,12 @@ import { setPlaylistName, setPlaylistId, selectPlaylistName } from './createPlay
 import { Playlist } from '../Playlist';
 import { useEffect } from 'react';
 
+interface PlaylistsObject {
+    [key: string]: string
+}
+
+const userPlaylists: PlaylistsObject = {'Select Playlist': ''};
+
 export const CreatePlaylist = () => {
     const accessToken = useSelector(selectAccessToken);
     const userId = useSelector(selectUserId);
@@ -17,15 +23,6 @@ export const CreatePlaylist = () => {
         ['Accept', 'application/json'],
         ['Authorization', `Bearer ${accessToken}`]
     ]);
-
-    const getPlaylists = async () => {
-        const result = await fetch(`https://api.spotify.com/v1/me/playlists`,{
-        method: 'GET',
-        headers: headers,
-        });
-        const data = await result.json();
-        console.log(data);
-    }
 
     const createPlaylist = async () => {
         const result = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`,{
@@ -40,20 +37,53 @@ export const CreatePlaylist = () => {
         return data
     };
 
+    const getPlaylists = async () => {
+        const result = await fetch(`https://api.spotify.com/v1/me/playlists`,{
+        method: 'GET',
+        headers: headers,
+        });
+        const data = await result.json();
+        let arrOfPlaylists = data.items;
+        console.log(arrOfPlaylists.length);
+        for (let i=0; i < arrOfPlaylists.length; i++) {
+            if (arrOfPlaylists[i].owner.id === userId) {
+                // need name to display in dropdown
+                let aPlaylistName: string = arrOfPlaylists[i].name;
+                // need id to get tracks in playlist
+                let aPlaylistId: string = arrOfPlaylists[i].id;
+                userPlaylists[aPlaylistName] = aPlaylistId;
+            }  
+        }
+        console.log(userPlaylists);
+        let select = document.createElement('select');
+        for (let [k,v] of Object.entries(userPlaylists)) {
+            let option = document.createElement('option');
+            option.value = v;
+            option.innerText = k;
+            select.appendChild(option);
+        }
+        
+        document.getElementById('create-container')?.appendChild(select);
+        
+        
+    }
+
     useEffect(() => {
-        getPlaylists()
+        if (userId) {
+            getPlaylists()
+        }
     }, [userId])
 
     return (
         <div className="w-6/12 mx-auto">
             <div className="flex justify-center my-10 mx-auto">
-                <div>
+                <div id="create-container">
                     <h2 className="text-center">Create Spotify Playlist</h2>
                     <input onChange={e => dispatch(setPlaylistName(e.target.value))} id="playlist-name-input" type="text" placeholder="Playlist Name" className="border-2 border-gray-200 rounded" />
                     <button onClick={createPlaylist} className="bg-blue-400 rounded px-3 py-1 ml-3">Create</button>
                     <p id="success" className="hidden bg-green-300 border-green-700 p-3">Playlist Created</p>
                     <p className="text-center">- or -</p>
-
+                    <h2 className="text-center">Choose Existing Playlist</h2>
                 </div>
             </div>
             <Playlist />

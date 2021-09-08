@@ -105,7 +105,6 @@ export const Playlist = () => {
 
     return (
         <div className="w-6/12 mx-auto">
-            <h2 className="text-center">Choose Existing Playlist</h2>
             <h2 id="playlist-name" className="text-3xl text-center mb-4">{useSelector(selectPlaylistName)}</h2>
             <ul id="playlist-ul"></ul>
             {/* <ul id="playlist-ul" className="border-l border-r border-b border-gray-400 rounded"></ul> */}
