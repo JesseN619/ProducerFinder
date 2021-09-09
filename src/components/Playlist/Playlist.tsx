@@ -61,29 +61,23 @@ export const Playlist = () => {
                     let trackId = arrOfSongs[i].track.id;
 
                     let li = document.createElement('li');
-                    li.className = "list-none flex items-center my-3";
+                    li.className = "song-list list-none flex whitespace-nowrap items-center my-2 px-2 py-1 bg-white shadow-md rounded";
                     li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
-                                        <div class="my-auto text-sm">
-                                            <p class="font-semibold p-0 m-0">
+                                        <div class="my-auto text-sm overflow-hidden mr-5">
+                                            <p class="font-semibold p-0 m-0 opacity-80">
                                                 ${displayTitle}
                                             </p>
-                                            <p class="p-0 m-0">
+                                            <p class="text-xs p-0 m-0 opacity-60">
                                                 ${displayArtist}
                                             </p>
-                                            <p class="p-0 m-0">
+                                            <p class="text-xs p-0 m-0 opacity-60">
                                                 ${displayAlbum}
                                             </p>
                                         </div>`
-                    // replace btn
-                    // let replaceBtn = document.createElement('button');
-                    // replaceBtn.className = "add-btn bg-yellow-400 px-3 py-1 rounded ml-auto mr-3";
-                    // replaceBtn.innerHTML = 'x';
-                    // replaceBtn.addEventListener('click', (e) => replace(e, songId))
-                    // li.appendChild(replaceBtn);
 
                     // delete btn
                     let delBtn = document.createElement('button');
-                    delBtn.className = "add-btn bg-red-400 px-3 py-1 rounded ml-auto mr-3";
+                    delBtn.className = "bg-red-600 hover:bg-red-700 px-2 rounded text-xl text-gray-200 font-semibold ml-auto";
                     delBtn.innerHTML = 'x';
                     delBtn.addEventListener('click', (e) => removeFromPlaylist(e, trackId))
                     li.appendChild(delBtn);
@@ -93,53 +87,13 @@ export const Playlist = () => {
             }
         }
 
-            // // Retrieve info for that song
-            // const request = await fetch(`https://api.spotify.com/v1/tracks/${songId}?market=US`,{
-            //         method: 'GET',
-            //         headers: headers
-            //     });
-        
-            // let spotifyResults = await request.json();
-            // console.log(spotifyResults);
-            
-
-            // // display playlist
-            // 
-
-            // let li = document.createElement('li');
-            // li.className = "list-none flex items-center my-3";
-            // li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
-            //                     <div class="my-auto text-sm">
-            //                         <p class="font-semibold p-0 m-0">
-            //                             ${displayTitle}
-            //                         </p>
-            //                         <p class="p-0 m-0">
-            //                             ${displayArtist}
-            //                         </p>
-            //                         <p class="p-0 m-0">
-            //                             ${displayAlbum}
-            //                         </p>
-            //                     </div>`
-            // // replace btn
-            // // let replaceBtn = document.createElement('button');
-            // // replaceBtn.className = "add-btn bg-yellow-400 px-3 py-1 rounded ml-auto mr-3";
-            // // replaceBtn.innerHTML = 'x';
-            // // replaceBtn.addEventListener('click', (e) => replace(e, songId))
-            // // li.appendChild(replaceBtn);
-
-            // // delete btn
-            // let delBtn = document.createElement('button');
-            // delBtn.className = "add-btn bg-red-400 px-3 py-1 rounded ml-auto mr-3";
-            // delBtn.innerHTML = 'x';
-            // delBtn.addEventListener('click', (e) => removeFromPlaylist(e, songId))
-            // li.appendChild(delBtn);
-            // ul.appendChild(li);
         if (playlistId) {
             displayPlaylist();
         }
         
     }, [playlistId])
 
+    // if addSongId changes
     useEffect(() => {
         const addToPlaylist = async () => {
             // let playlistNameInput = (document.getElementById("playlist-name-input") as HTMLInputElement)
@@ -173,29 +127,41 @@ export const Playlist = () => {
             let albumCover = spotifyResults.album.images[2].url;
 
             let li = document.createElement('li');
-            li.className = "list-none flex items-center my-3";
+            li.className = "song-list list-none flex whitespace-nowrap items-center my-2 px-2 py-1 bg-white shadow-md rounded";
             li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
-                                <div class="my-auto text-sm">
-                                    <p class="font-semibold p-0 m-0">
+                                <div class="my-auto text-sm overflow-hidden mr-5">
+                                    <p class="font-semibold p-0 m-0 opacity-80">
                                         ${displayTitle}
                                     </p>
-                                    <p class="p-0 m-0">
+                                    <p class="text-xs font-semibold p-0 m-0 opacity-60">
                                         ${displayArtist}
                                     </p>
-                                    <p class="p-0 m-0">
+                                    <p class="text-xs font-semibold p-0 m-0 opacity-60">
                                         ${displayAlbum}
                                     </p>
                                 </div>`
-            // replace btn
-            // let replaceBtn = document.createElement('button');
-            // replaceBtn.className = "add-btn bg-yellow-400 px-3 py-1 rounded ml-auto mr-3";
-            // replaceBtn.innerHTML = 'x';
-            // replaceBtn.addEventListener('click', (e) => replace(e, songId))
-            // li.appendChild(replaceBtn);
+
+            // let allBtnContainer = document.createElement('div');
+            // allBtnContainer.className="flex ml-auto";
+            // let btnContainer = document.createElement('div');
+            // btnContainer.className = "flex items-center flex-end mr-1";
+            // allBtnContainer.appendChild(btnContainer);
 
             // delete btn
+            // let delBtnContainer = document.createElement('div');
+            // delBtnContainer.className = 'flex ml-auto';
+            // let delBtn = document.createElement('button');
+            // delBtn.className = "bg-red-600 hover:bg-red-700 px-2 rounded text-xl text-gray-200 font-semibold ml-auto";
+            // delBtn.innerHTML = 'x';
+            // delBtn.addEventListener('click', (e) => removeFromPlaylist(e, songId))
+            // delBtnContainer.appendChild(delBtn);
+            // // allBtnContainer.appendChild(delBtnContainer);
+            // li.appendChild(delBtnContainer);
+            // ul.appendChild(li);
+
+            
             let delBtn = document.createElement('button');
-            delBtn.className = "add-btn bg-red-400 px-3 py-1 rounded ml-auto mr-3";
+            delBtn.className = "bg-red-600 hover:bg-red-700 px-2 rounded text-xl text-gray-200 font-semibold ml-auto";
             delBtn.innerHTML = 'x';
             delBtn.addEventListener('click', (e) => removeFromPlaylist(e, songId))
             li.appendChild(delBtn);
@@ -212,8 +178,12 @@ export const Playlist = () => {
 
     return (
         <div className="w-6/12 mx-auto">
-            <h2 id="playlist-name" className="text-3xl text-center mb-4">{useSelector(selectPlaylistName)}</h2>
-            <ul id="playlist-ul"></ul>
+            <h2 id="playlist-name" className="text-3xl text-center mt-2 mb-5 rounded">{useSelector(selectPlaylistName)}</h2>
+            <div id="list-container" className="flex justify-center rounded">
+                <img src="" alt="" />
+                <ul id="playlist-ul" className="text-left"></ul>
+            </div>
+            
             {/* <ul id="playlist-ul" className="border-l border-r border-b border-gray-400 rounded"></ul> */}
         </div>
     )

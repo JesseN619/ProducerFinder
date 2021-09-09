@@ -34,16 +34,17 @@ export function Authorization() {
 
   return (
     <div className="text-center">
-        {!isLoggedIn &&
-          <button
-          className="inline-block align-middle bg-blue-600 hover:bg-blue-700 rounded px-6 py-4 my-10 text-white"
+        {!isLoggedIn && <div className="login mx-auto"><button
+          className="inline-block align-middle bg-blue-600 hover:bg-blue-700 rounded px-5 py-3 mt-7 mb-3 text-white"
           aria-label="Log in using OAuth 2.0"
           onClick={() => window.open(getAuthorizeHref(), '_self')}
           >
           Log in with Spotify
-          </button>}
+          </button>
+          <p>Log in to your Spotify account to add songs to your playlists.</p></div>
+        }
         {isLoggedIn && <button
-          className="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 mx-auto text-white"
+          className="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 mt-10 mx-auto text-white"
           aria-label="Log out of spotify"
           onClick={() => window.location.reload()}
           >

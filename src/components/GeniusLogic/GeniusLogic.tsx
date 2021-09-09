@@ -71,6 +71,19 @@ export const GeniusLogic = () => {
         let producerInfo = await getProducerId();
         let producerId = producerInfo[0];
         let producerName = producerInfo[1];
+
+        const getProducerPic = async () => {
+            let request = await fetch(`https://api.genius.com/artists/${producerId}?access_token=${geniusToken}`, {
+                method: 'GET',
+            });
+    
+            let response = await request.json();
+            console.log('Producer info:')
+            console.log(response.response.artist.image_url);
+            return response.response.artist.image_url;
+        }
+
+        let producerPicURL = await getProducerPic();
     
         const getTopSongs = async () => {
             let request = await fetch(`https://api.genius.com/artists/${producerId}/songs?sort=popularity&access_token=${geniusToken}`, {
@@ -93,7 +106,7 @@ export const GeniusLogic = () => {
         }
     
         let topSongs = await getTopSongs();
-        console.log(topSongs);
+        // console.log(topSongs);
         let artists = topSongs[0];
         let songs = topSongs[1];
     
@@ -122,7 +135,10 @@ export const GeniusLogic = () => {
             let response = await request.json();
             return response.tracks.items;
         }    
-    
+        
+        const producerImg: HTMLImageElement = document.getElementById('producer-image') as HTMLImageElement;
+        producerImg.src = producerPicURL;
+        producerImg.className = 'rounded';
         const nameSection: HTMLElement = document.getElementById('producer-name') as HTMLElement
         nameSection.innerHTML = producerName;
     
@@ -143,7 +159,7 @@ export const GeniusLogic = () => {
                         headers: headers
                     });
                     let trackInfo = await trackRequest.json();
-                    console.log(trackInfo);
+                    // console.log(trackInfo);
 
                     let displayArtist = trackInfo.artists[0].name;
                     let displayTitle = trackInfo.name;
@@ -168,7 +184,7 @@ export const GeniusLogic = () => {
                     let allBtnContainer = document.createElement('div');
                     allBtnContainer.className="flex ml-auto";
                     let btnContainer = document.createElement('div');
-                    btnContainer.className = "flex items-center flex-end"
+                    btnContainer.className = "flex items-center flex-end mr-1"
                     if (trackInfo.preview_url) {
                         let preview = trackInfo.preview_url;
                         let previewBtn = document.createElement('button');
@@ -193,7 +209,7 @@ export const GeniusLogic = () => {
                     let addBtnContainer = document.createElement('div');
                     addBtnContainer.className = "flex items-center";
                     let addBtn = document.createElement('button');
-                    addBtn.className = "add-btn bg-blue-600 hover:bg-blue-700 px-2 rounded text-xl text-gray-200 font-semibold";
+                    addBtn.className = "bg-blue-600 hover:bg-blue-700 px-2 rounded text-xl text-gray-200 font-semibold";
                     addBtn.innerHTML = '+';
                     addBtn.addEventListener('click', () => storeSongId(songId))
                     addBtnContainer.appendChild(addBtn);
@@ -208,14 +224,18 @@ export const GeniusLogic = () => {
     }
 
     return (
-        <div className="w-5/12 mx-auto rounded">
-            <div className="flex justify-center my-10 mx-auto">
+        <div className="w-6/12 mx-auto rounded mt-10">
+            <p className="mb-3">Search Song (include artist name for accuracy)</p>
+            <div className="flex justify-center mb-10 mx-auto">
                 <input id="song-search" type="text" placeholder="Song/Artist" className="text-box border-2 border-blue-600 rounded px-1" />
                 <button onClick={() => search()} className="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 ml-3 text-white">Search</button>
             </div>
-            <h2 id="producer-name" className="text-3xl text-center mb-4 rounded opacity-80"></h2>
+            <div>
+                <img className="hidden" id="producer-image" src="" />
+            </div>
+            <h2 id="producer-name" className="text-3xl text-center mt-2 mb-5 rounded"></h2>
             
-            <div id="list-container" className="flex justify-center rounded py-5">
+            <div id="list-container" className="flex justify-center rounded">
                 <img src="" alt="" />
             </div>
             

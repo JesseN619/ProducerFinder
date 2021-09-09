@@ -59,6 +59,7 @@ export const CreatePlaylist = () => {
         }
         console.log(userPlaylists);
         let select = document.createElement('select');
+        select.className = 'border-2 border-blue-600 rounded px-1'
         for (let [k,v] of Object.entries(userPlaylists)) {
             let option = document.createElement('option');
             option.value = k;
@@ -80,17 +81,15 @@ export const CreatePlaylist = () => {
     }, [userId])
 
     return (
-        <div className="w-6/12 mx-auto">
-            <Authorization />
-            <User />
+        <div className="w-6/12 mx-auto rounded">
             {isLoggedIn && <div className="flex justify-center my-10 mx-auto">
                 <div id="create-container">
-                    <h2 className="text-center">Create Spotify Playlist</h2>
-                    <input onChange={e => dispatch(setPlaylistName(e.target.value))} id="playlist-name-input" type="text" placeholder="Playlist Name" className="border-0 rounded" />
-                    <button onClick={createPlaylist} className="bg-medGreen hover:bg-darkGreen rounded px-3 py-1 ml-3">Create</button>
+                    <p className="text-center mb-3">Create Spotify Playlist</p>
+                    <input onChange={e => dispatch(setPlaylistName(e.target.value))} id="playlist-name-input" type="text" placeholder="Playlist Name" className="text-box border-2 border-blue-600 rounded px-1" />
+                    <button onClick={createPlaylist} className="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 ml-3 text-white">Create</button>
                     <p id="success" className="hidden bg-green-300 border-green-700 p-3">Playlist Created</p>
-                    <p className="text-center">- or -</p>
-                    <h2 className="text-center">Choose Existing Playlist</h2>
+                    <p className="text-center my-9">- or -</p>
+                    <p className="text-center mb-3">Choose Existing Playlist</p>
                 </div>
             </div>}
             <Playlist />

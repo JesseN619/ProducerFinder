@@ -3,7 +3,7 @@ import authorizationReducer from '../components/Authorization/authorizationSlice
 import spotifyExampleReducer from '../components/User/UserSlice';
 import playlistReducer from '../components/CreatePlaylist/createPlaylistSlice';
 import addSongIdReducer from '../components/GeniusLogic/AddSongIdSlice';
-import removeSongIdReducer from '../components/Playlist/removeSongIdSlice';
+// import removeSongIdReducer from '../components/Playlist/removeSongIdSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +11,7 @@ export const store = configureStore({
     spotifyExample: spotifyExampleReducer,
     playlist: playlistReducer,
     addSongId: addSongIdReducer,
-    removeSongId: removeSongIdReducer
+    // removeSongId: removeSongIdReducer
   },
 });
 
