@@ -10,6 +10,7 @@ import {
 import { setUserProfileAsync } from '../User/UserSlice';
 import { getAuthorizeHref } from '../../oauthConfig';
 import { getHashParams, removeHashParamsFromUrl } from '../../utils/hashUtils';
+import { CreatePlaylist } from '../CreatePlaylist';
 
 const hashParams = getHashParams();
 const access_token = hashParams.access_token;
@@ -32,24 +33,22 @@ export function Authorization() {
   }, []);
 
   return (
-    <div>
-      <div className="auth-row">
+    <div className="text-center">
         {!isLoggedIn &&
           <button
-          className="button"
+          className="inline-block align-middle bg-blue-600 hover:bg-blue-700 rounded px-6 py-4 my-10 text-white"
           aria-label="Log in using OAuth 2.0"
           onClick={() => window.open(getAuthorizeHref(), '_self')}
           >
           Log in with Spotify
           </button>}
         {isLoggedIn && <button
-          className="button"
+          className="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 mx-auto text-white"
           aria-label="Log out of spotify"
           onClick={() => window.location.reload()}
           >
           Log out
           </button>}
-      </div>
     </div>
   );
 }

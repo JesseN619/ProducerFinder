@@ -100,6 +100,7 @@ export const GeniusLogic = () => {
         const listContainer = document.getElementById('list-container')!;
         listContainer.innerHTML = `<ul id="list"></ul>`;
         let ul = document.getElementById('list')!;
+        ul.className = 'text-left';
     
         // Spotify =====================================================
     
@@ -151,37 +152,37 @@ export const GeniusLogic = () => {
                     songId = trackInfo.id;
 
                     let li = document.createElement('li');
-                    li.className = "list-none flex items-center my-3";
+                    li.className = "song-list list-none flex whitespace-nowrap items-center my-2 px-2 py-1 bg-white shadow-md rounded";
                     li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
-                                        <div class="my-auto text-sm">
-                                            <p class="font-semibold p-0 m-0">
+                                        <div class="my-auto text-sm overflow-hidden mr-5">
+                                            <p class="font-semibold p-0 m-0 opacity-80">
                                                 ${displayTitle}
                                             </p>
-                                            <p class="p-0 m-0">
+                                            <p class="text-xs p-0 m-0 opacity-60">
                                                 ${displayArtist}
                                             </p>
-                                            <p class="p-0 m-0">
+                                            <p class="text-xs p-0 m-0 opacity-60">
                                                 ${displayAlbum}
                                             </p>
                                         </div>`
                     let allBtnContainer = document.createElement('div');
                     allBtnContainer.className="flex ml-auto";
                     let btnContainer = document.createElement('div');
-                    btnContainer.className = "flex items-center"
+                    btnContainer.className = "flex items-center flex-end"
                     if (trackInfo.preview_url) {
                         let preview = trackInfo.preview_url;
                         let previewBtn = document.createElement('button');
-                        previewBtn.className = "text-xl mr-1";
+                        previewBtn.className = "text-xl";
                         // previewBtn.innerHTML = '&#9658;';
-                        previewBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mt-auto" viewBox="0 0 20 20" fill="currentColor">
+                        previewBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mt-auto text-gray-500 hover:text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
                       </svg>`
                         previewBtn.addEventListener('click', (e) => playPreview(e, preview))
                         btnContainer.appendChild(previewBtn);
 
                         let stopBtn = document.createElement('button');
-                        stopBtn.className = "mr-3 text-xl";
-                        stopBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                        stopBtn.className = "mr-1 text-xl";
+                        stopBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-500 hover:text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                       </svg>`;
                         stopBtn.addEventListener('click', () => stopSong())
@@ -192,7 +193,7 @@ export const GeniusLogic = () => {
                     let addBtnContainer = document.createElement('div');
                     addBtnContainer.className = "flex items-center";
                     let addBtn = document.createElement('button');
-                    addBtn.className = "add-btn bg-blue-400 px-2 rounded text-xl";
+                    addBtn.className = "add-btn bg-blue-600 hover:bg-blue-700 px-2 rounded text-xl text-gray-200 font-semibold";
                     addBtn.innerHTML = '+';
                     addBtn.addEventListener('click', () => storeSongId(songId))
                     addBtnContainer.appendChild(addBtn);
@@ -207,14 +208,14 @@ export const GeniusLogic = () => {
     }
 
     return (
-        <div className="w-6/12 mx-auto">
+        <div className="w-5/12 mx-auto rounded">
             <div className="flex justify-center my-10 mx-auto">
-                <input id="song-search" type="text" placeholder="Song/Artist" className="border-2 border-gray-200 rounded" />
-                <button onClick={() => search()} className="bg-blue-400 rounded px-3 py-1 ml-3">Search</button>
+                <input id="song-search" type="text" placeholder="Song/Artist" className="text-box border-2 border-blue-600 rounded px-1" />
+                <button onClick={() => search()} className="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 ml-3 text-white">Search</button>
             </div>
-            <h2 id="producer-name" className="text-3xl text-center mb-4"></h2>
+            <h2 id="producer-name" className="text-3xl text-center mb-4 rounded opacity-80"></h2>
             
-            <div id="list-container" className="flex justify-center">
+            <div id="list-container" className="flex justify-center rounded py-5">
                 <img src="" alt="" />
             </div>
             

@@ -1,10 +1,12 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAccessToken } from '../Authorization/authorizationSlice';
+import { selectAccessToken, selectIsLoggedIn } from '../Authorization/authorizationSlice';
 import { selectUserId } from '../User/UserSlice';
 import { setPlaylistName, setPlaylistId, selectPlaylistName } from './createPlaylistSlice';
 import { Playlist } from '../Playlist';
 import { useEffect } from 'react';
+import { Authorization } from '../Authorization';
+import { User } from '../User';
 
 interface PlaylistsObject {
     [key: string]: string
@@ -13,6 +15,7 @@ interface PlaylistsObject {
 const userPlaylists: PlaylistsObject = {'': 'Select Playlist'};
 
 export const CreatePlaylist = () => {
+    const isLoggedIn = useSelector(selectIsLoggedIn);
     const accessToken = useSelector(selectAccessToken);
     const userId = useSelector(selectUserId);
     const playlistName = useSelector(selectPlaylistName);
@@ -78,16 +81,18 @@ export const CreatePlaylist = () => {
 
     return (
         <div className="w-6/12 mx-auto">
-            <div className="flex justify-center my-10 mx-auto">
+            <Authorization />
+            <User />
+            {isLoggedIn && <div className="flex justify-center my-10 mx-auto">
                 <div id="create-container">
                     <h2 className="text-center">Create Spotify Playlist</h2>
-                    <input onChange={e => dispatch(setPlaylistName(e.target.value))} id="playlist-name-input" type="text" placeholder="Playlist Name" className="border-2 border-gray-200 rounded" />
-                    <button onClick={createPlaylist} className="bg-blue-400 rounded px-3 py-1 ml-3">Create</button>
+                    <input onChange={e => dispatch(setPlaylistName(e.target.value))} id="playlist-name-input" type="text" placeholder="Playlist Name" className="border-0 rounded" />
+                    <button onClick={createPlaylist} className="bg-medGreen hover:bg-darkGreen rounded px-3 py-1 ml-3">Create</button>
                     <p id="success" className="hidden bg-green-300 border-green-700 p-3">Playlist Created</p>
                     <p className="text-center">- or -</p>
                     <h2 className="text-center">Choose Existing Playlist</h2>
                 </div>
-            </div>
+            </div>}
             <Playlist />
         </div>
     )
