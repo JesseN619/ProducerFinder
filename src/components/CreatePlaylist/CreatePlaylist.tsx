@@ -10,7 +10,7 @@ interface PlaylistsObject {
     [key: string]: string
 }
 
-const userPlaylists: PlaylistsObject = {'': 'Select Playlist'};
+const userPlaylists: PlaylistsObject = {'': '-- Select Playlist --'};
 
 export const CreatePlaylist = () => {
     const isLoggedIn = useSelector(selectIsLoggedIn);

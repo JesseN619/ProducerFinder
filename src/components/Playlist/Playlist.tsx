@@ -115,10 +115,10 @@ export const Playlist = () => {
                                 <p class="font-semibold p-0 m-0 opacity-80">
                                     ${displayTitle}
                                 </p>
-                                <p class="text-xs font-semibold p-0 m-0 opacity-60">
+                                <p class="text-xs p-0 m-0 opacity-60">
                                     ${displayArtist}
                                 </p>
-                                <p class="text-xs font-semibold p-0 m-0 opacity-60">
+                                <p class="text-xs p-0 m-0 opacity-60">
                                     ${displayAlbum}
                                 </p>
                             </div>`
