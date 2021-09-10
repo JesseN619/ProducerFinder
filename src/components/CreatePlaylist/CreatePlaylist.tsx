@@ -36,7 +36,7 @@ export const CreatePlaylist = () => {
         const data = await result.json();
         dispatch(setPlaylistId(data.id));
         (document.getElementById("playlist-name-input") as HTMLInputElement).value = '';
-        document.getElementById("success")!.className = "bg-green-300 border-green-700 p-3";
+        document.getElementById("success")!.className = "text-white flex bg-green-400 border-2 px-3 ml-3 self-center rounded";
         return data
     };
 
@@ -85,9 +85,14 @@ export const CreatePlaylist = () => {
             {isLoggedIn && <div className="flex justify-center my-10 mx-auto">
                 <div id="create-container">
                     <p className="text-center mb-3">Create Spotify Playlist</p>
-                    <input onChange={e => dispatch(setPlaylistName(e.target.value))} id="playlist-name-input" type="text" placeholder="Playlist Name" className="text-box border-2 border-blue-600 rounded px-1" />
-                    <button onClick={createPlaylist} className="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 ml-3 text-white">Create</button>
-                    <p id="success" className="hidden bg-green-300 border-green-700 p-3">Playlist Created</p>
+                    <div className="flex">
+                        <input onChange={e => dispatch(setPlaylistName(e.target.value))} id="playlist-name-input" type="text" placeholder="Playlist Name" className="text-box border-2 border-blue-600 rounded px-1" />
+                        <button onClick={createPlaylist} className="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 ml-3 text-white">Create</button>
+                        <div id="success" className="hidden">
+                            <p>&#10003;</p>
+                            <p className="text-xs ml-3">Playlist<br />Created</p>
+                        </div>
+                    </div>
                     <p className="text-center my-9">- or -</p>
                     <p className="text-center mb-3">Choose Existing Playlist</p>
                 </div>
