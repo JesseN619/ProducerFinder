@@ -5,7 +5,6 @@ import {
   setAccessToken,
   setTokenExpiryDate,
   selectIsLoggedIn,
-  selectTokenExpiryDate,
 } from './authorizationSlice';
 import { setUserProfileAsync } from '../User/UserSlice';
 import { getAuthorizeHref } from '../../oauthConfig';
@@ -19,7 +18,6 @@ removeHashParamsFromUrl();
 
 export function Authorization() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const tokenExpiryDate = useSelector(selectTokenExpiryDate);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,7 +27,6 @@ export function Authorization() {
       dispatch(setTokenExpiryDate(Number(expires_in)));
       dispatch(setUserProfileAsync(access_token));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -39,7 +36,7 @@ export function Authorization() {
           aria-label="Log in using OAuth 2.0"
           onClick={() => window.open(getAuthorizeHref(), '_self')}
           >
-          Log in with <img className="spotify-logo ml-2" src={logo} />
+          Log in with <img className="spotify-logo ml-2" src={logo} alt="Spotify logo" />
           </button>
           <p>to add songs to your playlists.</p></div>
         }
@@ -48,9 +45,8 @@ export function Authorization() {
           aria-label="Log out of spotify"
           onClick={() => window.location.reload()}
           >
-          Log out of <img className="spotify-logo ml-2" src={logo} />
+          Log out of <img className="spotify-logo ml-2" src={logo} alt="Spotify logo" />
           </button>}
     </div>
   );
 }
-// src/assets/images/spotify-icons-logos/logos/01_RGB/02_PNG/Spotify_Logo_RGB_Black.png

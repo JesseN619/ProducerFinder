@@ -1,15 +1,12 @@
-import { selectPlaylistName, selectPlaylistId, setPlaylistName } from "../CreatePlaylist/createPlaylistSlice";
+import { selectPlaylistName, selectPlaylistId } from "../CreatePlaylist/createPlaylistSlice";
 import { selectAddSongId } from "../GeniusLogic/AddSongIdSlice";
 import { selectAccessToken } from '../Authorization/authorizationSlice';
 import { useEffect } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 export const Playlist = () => {
-    const dispatch = useDispatch();
-
     let accessToken = useSelector(selectAccessToken);
     let playlistId = useSelector(selectPlaylistId);
-    let playlistName = useSelector(selectPlaylistName);
     let songId = useSelector(selectAddSongId);
 
     const ul = document.getElementById('playlist-ul')!;
@@ -23,7 +20,7 @@ export const Playlist = () => {
     const removeFromPlaylist = async (e: MouseEvent, songId:string) => {
         await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`,{
             method: 'DELETE',
-            body: `{\"tracks\":[{\"uri\":\"spotify:track:${songId}\"}]}`,
+            body: `{"tracks":[{"uri":"spotify:track:${songId}"}]}`,
             headers: headers
         });
         let li1 = (e.target as Element).parentNode;
@@ -32,11 +29,6 @@ export const Playlist = () => {
 
     // if playlist id changes, display playlist
     useEffect(() => {
-        // const playlistDisplayName = document.getElementById('playlist-name')!;
-        // playlistDisplayName.innerHTML = playlistName;
-
-        
-
         const displayPlaylist = async () => {
             // clear out prior playlist
             ul.innerHTML = '';
@@ -49,9 +41,7 @@ export const Playlist = () => {
             console.log(data)
             let arrOfSongs = data.items;
 
-            // dispatch(setPlaylistName())
-
-            if (arrOfSongs.length != 0) {
+            if (arrOfSongs.length !== 0) {
                 // console.log(arrOfSongs)
                 for (let i=0; i< arrOfSongs.length; i++) {
                     let displayArtist = arrOfSongs[i].track.artists[0].name;
@@ -82,7 +72,6 @@ export const Playlist = () => {
                     delBtn.addEventListener('click', (e) => removeFromPlaylist(e, trackId))
                     li.appendChild(delBtn);
                     ul.appendChild(li);
-
                 }
             }
         }
@@ -112,7 +101,6 @@ export const Playlist = () => {
         
             let spotifyResults = await request.json();
             console.log(spotifyResults);
-            
 
             // display playlist
             let displayArtist = spotifyResults.artists[0].name;

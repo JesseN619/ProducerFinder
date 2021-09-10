@@ -5,8 +5,6 @@ import { selectUserId } from '../User/UserSlice';
 import { setPlaylistName, setPlaylistId, selectPlaylistName } from './createPlaylistSlice';
 import { Playlist } from '../Playlist';
 import { useEffect } from 'react';
-import { Authorization } from '../Authorization';
-import { User } from '../User';
 
 interface PlaylistsObject {
     [key: string]: string

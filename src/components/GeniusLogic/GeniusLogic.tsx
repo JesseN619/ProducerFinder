@@ -18,7 +18,6 @@ const playPreview = (e: MouseEvent, preview:string) => {
         stopSong();
     }
     playSong = new Audio(preview);
-    // (e.target as Element).removeEventListener('click', playPreview);
     return playSong.play()
 }
 
@@ -225,7 +224,6 @@ export const GeniusLogic = () => {
                 }
             }
         }
-    
     }
 
     return (
@@ -236,7 +234,7 @@ export const GeniusLogic = () => {
                 <button onClick={() => search()} className="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 ml-3 text-white">Search</button>
             </div>
             <div>
-                <img className="hidden" id="producer-image" src="" />
+                <img className="hidden" id="producer-image" src="" alt="producer" />
             </div>
             <h2 id="producer-name" className="text-3xl text-center mt-2 mb-5 rounded"></h2>
             
