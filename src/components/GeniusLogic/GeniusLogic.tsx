@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { selectIsLoggedIn } from '..';
 import { setAddSongId } from './AddSongIdSlice';
 
 const geniusToken = process.env.REACT_APP_GENIUS_ACCESS_TOKEN;
@@ -26,6 +27,7 @@ export const GeniusLogic = () => {
     const storeSongId = (songId:string) => {
         dispatch(setAddSongId(songId));
     }
+    const isLoggedIn = useSelector(selectIsLoggedIn);
 
     const getSpotifyToken = async () => {
         const result = await fetch('https://accounts.spotify.com/api/token',{
@@ -206,14 +208,17 @@ export const GeniusLogic = () => {
                     }
                     allBtnContainer.appendChild(btnContainer);
                     
-                    let addBtnContainer = document.createElement('div');
-                    addBtnContainer.className = "flex items-center";
-                    let addBtn = document.createElement('button');
-                    addBtn.className = "bg-blue-600 hover:bg-blue-700 px-2 rounded text-xl text-gray-200 font-semibold";
-                    addBtn.innerHTML = '+';
-                    addBtn.addEventListener('click', () => storeSongId(songId))
-                    addBtnContainer.appendChild(addBtn);
-                    allBtnContainer.appendChild(addBtnContainer);
+                    if (isLoggedIn) {
+                        let addBtnContainer = document.createElement('div');
+                        addBtnContainer.className = "flex items-center";
+                        let addBtn = document.createElement('button');
+                        addBtn.className = "bg-blue-600 hover:bg-blue-700 px-2 rounded text-xl text-gray-200 font-semibold";
+                        addBtn.innerHTML = '+';
+                        addBtn.addEventListener('click', () => storeSongId(songId))
+                        addBtnContainer.appendChild(addBtn);
+                        allBtnContainer.appendChild(addBtnContainer);
+                    }
+                        
                     li.appendChild(allBtnContainer);
                     ul.appendChild(li);
                     break;

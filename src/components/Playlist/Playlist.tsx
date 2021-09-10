@@ -96,12 +96,6 @@ export const Playlist = () => {
     // if addSongId changes
     useEffect(() => {
         const addToPlaylist = async () => {
-            // let playlistNameInput = (document.getElementById("playlist-name-input") as HTMLInputElement)
-            // console.log(playlistNameInput);
-            // let playlistName = playlistNameInput.value;
-            // console.log(playlistName);
-            // console.log(accessToken);
-
             // Add song to playlist in Spotify database
             const result = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?uris=spotify:track:${songId}`,{
                 method: 'POST',
@@ -129,37 +123,18 @@ export const Playlist = () => {
             let li = document.createElement('li');
             li.className = "song-list list-none flex whitespace-nowrap items-center my-2 px-2 py-1 bg-white shadow-md rounded";
             li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
-                                <div class="my-auto text-sm overflow-hidden mr-5">
-                                    <p class="font-semibold p-0 m-0 opacity-80">
-                                        ${displayTitle}
-                                    </p>
-                                    <p class="text-xs font-semibold p-0 m-0 opacity-60">
-                                        ${displayArtist}
-                                    </p>
-                                    <p class="text-xs font-semibold p-0 m-0 opacity-60">
-                                        ${displayAlbum}
-                                    </p>
-                                </div>`
+                            <div class="my-auto text-sm overflow-hidden mr-5">
+                                <p class="font-semibold p-0 m-0 opacity-80">
+                                    ${displayTitle}
+                                </p>
+                                <p class="text-xs font-semibold p-0 m-0 opacity-60">
+                                    ${displayArtist}
+                                </p>
+                                <p class="text-xs font-semibold p-0 m-0 opacity-60">
+                                    ${displayAlbum}
+                                </p>
+                            </div>`
 
-            // let allBtnContainer = document.createElement('div');
-            // allBtnContainer.className="flex ml-auto";
-            // let btnContainer = document.createElement('div');
-            // btnContainer.className = "flex items-center flex-end mr-1";
-            // allBtnContainer.appendChild(btnContainer);
-
-            // delete btn
-            // let delBtnContainer = document.createElement('div');
-            // delBtnContainer.className = 'flex ml-auto';
-            // let delBtn = document.createElement('button');
-            // delBtn.className = "bg-red-600 hover:bg-red-700 px-2 rounded text-xl text-gray-200 font-semibold ml-auto";
-            // delBtn.innerHTML = 'x';
-            // delBtn.addEventListener('click', (e) => removeFromPlaylist(e, songId))
-            // delBtnContainer.appendChild(delBtn);
-            // // allBtnContainer.appendChild(delBtnContainer);
-            // li.appendChild(delBtnContainer);
-            // ul.appendChild(li);
-
-            
             let delBtn = document.createElement('button');
             delBtn.className = "bg-red-600 hover:bg-red-700 px-2 rounded text-xl text-gray-200 font-semibold ml-auto";
             delBtn.innerHTML = 'x';
