@@ -10,7 +10,7 @@ import {
 import { setUserProfileAsync } from '../User/UserSlice';
 import { getAuthorizeHref } from '../../oauthConfig';
 import { getHashParams, removeHashParamsFromUrl } from '../../utils/hashUtils';
-import { CreatePlaylist } from '../CreatePlaylist';
+import logo from '../../assets/images/spotify-icons-logos/logos/01_RGB/02_PNG/Spotify_Logo_RGB_Black.png';
 
 const hashParams = getHashParams();
 const access_token = hashParams.access_token;
@@ -35,21 +35,22 @@ export function Authorization() {
   return (
     <div className="text-center">
         {!isLoggedIn && <div className="login mx-auto"><button
-          className="inline-block align-middle bg-blue-600 hover:bg-blue-700 rounded px-5 py-3 mt-7 mb-3 text-white"
+          className="bg-white border-2 border-blue-600 hover:border-white rounded px-5 py-3 mt-7 mb-3 mx-auto flex"
           aria-label="Log in using OAuth 2.0"
           onClick={() => window.open(getAuthorizeHref(), '_self')}
           >
-          Log in with Spotify
+          Log in with <img className="spotify-logo ml-2" src={logo} />
           </button>
-          <p>Log in to your Spotify account to add songs to your playlists.</p></div>
+          <p>to add songs to your playlists.</p></div>
         }
         {isLoggedIn && <button
-          className="bg-blue-600 hover:bg-blue-700 rounded px-3 py-1 mt-10 mx-auto text-white"
+          className="bg-white border-2 border-blue-600 hover:border-white rounded px-5 py-3 mt-7 mb-3 mx-auto flex"
           aria-label="Log out of spotify"
           onClick={() => window.location.reload()}
           >
-          Log out
+          Log out of <img className="spotify-logo ml-2" src={logo} />
           </button>}
     </div>
   );
 }
+// src/assets/images/spotify-icons-logos/logos/01_RGB/02_PNG/Spotify_Logo_RGB_Black.png
