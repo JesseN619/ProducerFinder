@@ -5,17 +5,18 @@ import reportWebVitals from './reportWebVitals';
 import './styles.css';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
+import { FirebaseAppProvider } from "reactfire";
+import { firebaseConfig } from './firebaseConfig';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store= {store}>
-      <Home title={'ProducerFinder'} />
-    </Provider>
+    <FirebaseAppProvider firebaseConfig={firebaseConfig}>
+      <Provider store={store}>
+        <Home title={'ProducerFinder'} />
+      </Provider>
+    </FirebaseAppProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
