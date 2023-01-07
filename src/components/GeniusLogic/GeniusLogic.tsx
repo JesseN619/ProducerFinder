@@ -276,10 +276,10 @@ export const GeniusLogic = () => {
       <div>
         <img className="hidden" id="producer-image" src="" alt="producer" />
       </div>
-      <h2
+      <div
         id="producer-name"
         className="text-3xl text-center mt-2 mb-5 rounded"
-      ></h2>
+      ></div>
 
       <div id="list-container" className="flex justify-center rounded">
         <img src="" alt="" />
