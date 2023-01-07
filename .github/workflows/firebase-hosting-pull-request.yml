@@ -2,16 +2,24 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on PR
-'on': pull_request
+"on": pull_request
+
+env:
+  REACT_APP_API_KEY: ${{secrets.REACT_APP_API_KEY}}
+  REACT_APP_SPOTIFY_CLIENT_ID: ${{secrets.REACT_APP_SPOTIFY_CLIENT_ID}}
+  REACT_APP_SPOTIFY_CLIENT_SECRET: ${{secrets.REACT_APP_SPOTIFY_CLIENT_SECRET}}
+  REACT_APP_REDIRECT_URI: ${{secrets.REACT_APP_REDIRECT_URI}}
+  REACT_APP_GENIUS_ACCESS_TOKEN: ${{secrets.REACT_APP_GENIUS_ACCESS_TOKEN}}
+
 jobs:
   build_and_preview:
-    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PRODUCERFINDER_6ACA0 }}'
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_PRODUCERFINDER_6ACA0 }}"
           projectId: producerfinder-6aca0
