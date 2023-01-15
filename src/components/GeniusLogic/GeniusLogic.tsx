@@ -157,35 +157,36 @@ export const GeniusLogic = () => {
       const artistName = topSongs[i].primary_artist.name;
       const spotifyResults = await searchSpotify(songTitle, headers);
 
-      // loop through Spotify search results for song's title
-      for (let i = 0; i < spotifyResults.length; i++) {
-        if (
-          spotifyResults[i].artists[0].name.toLowerCase() ===
-          artistName.toLowerCase()
-        ) {
-          let songId = spotifyResults[i].id;
+      const matchingResult = spotifyResults.find(
+        (result: any) =>
+          result.artists[0].name.toLowerCase() === artistName.toLowerCase()
+      );
 
-          // Get song by songId to get preview URLs (search does not have preview URLs for most songs)
-          let trackRequest = await fetch(
-            `https://api.spotify.com/v1/tracks/${songId}?market=US`,
-            {
-              method: "GET",
-              headers: headers,
-            }
-          );
-          let trackInfo = await trackRequest.json();
-          // console.log(trackInfo);
+      if (!matchingResult) continue;
 
-          let displayArtist = trackInfo.artists[0].name;
-          let displayTitle = trackInfo.name;
-          let displayAlbum = trackInfo.album.name;
-          let albumCover = trackInfo.album.images[2].url;
-          songId = trackInfo.id;
+      let songId = matchingResult.id;
 
-          let li = document.createElement("li");
-          li.className =
-            "song-list list-none flex whitespace-nowrap items-center my-2 px-2 py-1 bg-white shadow-md rounded";
-          li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
+      // Get song by songId to get preview URLs (search does not have preview URLs for most songs)
+      let trackRequest = await fetch(
+        `https://api.spotify.com/v1/tracks/${songId}?market=US`,
+        {
+          method: "GET",
+          headers: headers,
+        }
+      );
+      let trackInfo = await trackRequest.json();
+      // console.log(trackInfo);
+
+      let displayArtist = trackInfo.artists[0].name;
+      let displayTitle = trackInfo.name;
+      let displayAlbum = trackInfo.album.name;
+      let albumCover = trackInfo.album.images[2].url;
+      songId = trackInfo.id;
+
+      let li = document.createElement("li");
+      li.className =
+        "song-list list-none flex whitespace-nowrap items-center my-2 px-2 py-1 bg-white shadow-md rounded";
+      li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
                                         <div class="my-auto text-sm overflow-hidden mr-5">
                                             <p class="font-semibold p-0 m-0 opacity-80">
                                                 ${displayTitle}
@@ -197,50 +198,45 @@ export const GeniusLogic = () => {
                                                 ${displayAlbum}
                                             </p>
                                         </div>`;
-          let allBtnContainer = document.createElement("div");
-          allBtnContainer.className = "flex ml-auto";
-          let btnContainer = document.createElement("div");
-          btnContainer.className = "flex items-center flex-end mr-1";
-          if (trackInfo.preview_url) {
-            let preview = trackInfo.preview_url;
-            let previewBtn = document.createElement("button");
-            previewBtn.className = "text-xl";
-            // previewBtn.innerHTML = '&#9658;';
-            previewBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mt-auto text-gray-500 hover:text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+      let allBtnContainer = document.createElement("div");
+      allBtnContainer.className = "flex ml-auto";
+      let btnContainer = document.createElement("div");
+      btnContainer.className = "flex items-center flex-end mr-1";
+      if (trackInfo.preview_url) {
+        let preview = trackInfo.preview_url;
+        let previewBtn = document.createElement("button");
+        previewBtn.className = "text-xl";
+        // previewBtn.innerHTML = '&#9658;';
+        previewBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mt-auto text-gray-500 hover:text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
                       </svg>`;
-            previewBtn.addEventListener("click", (e) =>
-              playPreview(e, preview)
-            );
-            btnContainer.appendChild(previewBtn);
+        previewBtn.addEventListener("click", (e) => playPreview(e, preview));
+        btnContainer.appendChild(previewBtn);
 
-            let stopBtn = document.createElement("button");
-            stopBtn.className = "mr-1 text-xl";
-            stopBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-500 hover:text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+        let stopBtn = document.createElement("button");
+        stopBtn.className = "mr-1 text-xl";
+        stopBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-500 hover:text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                       </svg>`;
-            stopBtn.addEventListener("click", () => stopSong());
-            btnContainer.appendChild(stopBtn);
-          }
-          allBtnContainer.appendChild(btnContainer);
-
-          if (isLoggedIn) {
-            let addBtnContainer = document.createElement("div");
-            addBtnContainer.className = "flex items-center";
-            let addBtn = document.createElement("button");
-            addBtn.className =
-              "bg-blue-600 hover:bg-blue-700 px-2 rounded text-xl text-gray-200 font-semibold";
-            addBtn.innerHTML = "+";
-            addBtn.addEventListener("click", () => storeSongId(songId));
-            addBtnContainer.appendChild(addBtn);
-            allBtnContainer.appendChild(addBtnContainer);
-          }
-
-          li.appendChild(allBtnContainer);
-          ul.appendChild(li);
-          break;
-        }
+        stopBtn.addEventListener("click", () => stopSong());
+        btnContainer.appendChild(stopBtn);
       }
+      allBtnContainer.appendChild(btnContainer);
+
+      if (isLoggedIn) {
+        let addBtnContainer = document.createElement("div");
+        addBtnContainer.className = "flex items-center";
+        let addBtn = document.createElement("button");
+        addBtn.className =
+          "bg-blue-600 hover:bg-blue-700 px-2 rounded text-xl text-gray-200 font-semibold";
+        addBtn.innerHTML = "+";
+        addBtn.addEventListener("click", () => storeSongId(songId));
+        addBtnContainer.appendChild(addBtn);
+        allBtnContainer.appendChild(addBtnContainer);
+      }
+
+      li.appendChild(allBtnContainer);
+      ul.appendChild(li);
     }
   };
 
