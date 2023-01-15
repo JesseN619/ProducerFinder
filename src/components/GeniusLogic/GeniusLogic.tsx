@@ -21,6 +21,18 @@ const playPreview = (e: MouseEvent, preview: string) => {
   return playSong.play();
 };
 
+const searchSpotify = async (songTitle: string, headers: Headers) => {
+  let request = await fetch(
+    `https://api.spotify.com/v1/search?q=${songTitle}&type=track&market=US&limit=5`,
+    {
+      method: "GET",
+      headers: headers,
+    }
+  );
+  let response = await request.json();
+  return response.tracks.items;
+};
+
 export const GeniusLogic = () => {
   const dispatch = useDispatch();
   const storeSongId = (songId: string) => {
@@ -97,32 +109,20 @@ export const GeniusLogic = () => {
     let producerPicURL = await getProducerPic();
 
     const getTopSongs = async () => {
-      let request = await fetch(
+      const request = await fetch(
         `https://api.genius.com/artists/${producerId}/songs?sort=popularity&access_token=${geniusToken}`,
         {
           method: "GET",
         }
       );
 
-      let response = await request.json();
+      const response = await request.json();
       // TODO: instead of producer_artists[0], show dropdown of all producers and let user choose
-      let topSongsRaw = response.response.songs;
-      let artists: string[] = [];
-      let titles: string[] = [];
-      for (let i = 0; i < topSongsRaw.length; i++) {
-        let artist = topSongsRaw[i].primary_artist.name;
-        artists.push(artist);
-        let title = topSongsRaw[i].title;
-        titles.push(title);
-      }
-      let topSongs = [artists, titles];
+      const topSongs = response.response.songs;
       return topSongs;
     };
 
-    let topSongs = await getTopSongs();
-    // console.log(topSongs);
-    let artists = topSongs[0];
-    let songs = topSongs[1];
+    const topSongs = await getTopSongs();
 
     const listContainer = document.getElementById("list-container")!;
     listContainer.innerHTML = `<ul id="list"></ul>`;
@@ -131,27 +131,15 @@ export const GeniusLogic = () => {
 
     // Spotify =====================================================
 
-    let spotifyToken = await getSpotifyToken();
+    const spotifyToken = await getSpotifyToken();
 
-    let headers = new Headers([
+    const headers = new Headers([
       ["Content-Type", "application/json"],
       ["Accept", "application/json"],
       ["Authorization", `Bearer ${spotifyToken}`],
     ]);
 
     let songTitle = "";
-
-    const searchSpotify = async () => {
-      let request = await fetch(
-        `https://api.spotify.com/v1/search?q=${songTitle}&type=track&market=US&limit=5`,
-        {
-          method: "GET",
-          headers: headers,
-        }
-      );
-      let response = await request.json();
-      return response.tracks.items;
-    };
 
     const producerImg: HTMLImageElement = document.getElementById(
       "producer-image"
@@ -164,10 +152,10 @@ export const GeniusLogic = () => {
     nameSection.innerHTML = producerName;
 
     // loop through producer's top songs
-    for (let i = 0; i < artists.length; i++) {
-      songTitle = songs[i];
-      let artistName = artists[i];
-      let spotifyResults = await searchSpotify();
+    for (let i = 0; i < topSongs.length; i++) {
+      songTitle = topSongs[i].title;
+      const artistName = topSongs[i].primary_artist.name;
+      const spotifyResults = await searchSpotify(songTitle, headers);
 
       // loop through Spotify search results for song's title
       for (let i = 0; i < spotifyResults.length; i++) {
