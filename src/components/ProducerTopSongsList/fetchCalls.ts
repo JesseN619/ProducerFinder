@@ -64,3 +64,15 @@ export const searchSpotify = async (songTitle: string, headers: Headers) => {
   const response = await request.json();
   return response.tracks.items;
 };
+
+export const getSpotifyTrackById = async (songId: string, headers: Headers) => {
+  const request = await fetch(
+    `https://api.spotify.com/v1/tracks/${songId}?market=US`,
+    {
+      method: "GET",
+      headers: headers,
+    }
+  );
+  const trackInfo = await request.json();
+  return trackInfo;
+};

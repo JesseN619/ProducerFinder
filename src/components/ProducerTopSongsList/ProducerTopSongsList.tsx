@@ -7,6 +7,7 @@ import {
   getProducerId,
   getProducerImgFromGenius,
   getSpotifyToken,
+  getSpotifyTrackById,
   searchSpotify,
 } from "./fetchCalls";
 
@@ -99,15 +100,7 @@ export const ProducerTopSongsList = () => {
       let songId = matchingResult.id;
 
       // Get song by songId to get preview URLs (search does not have preview URLs for most songs)
-      const trackRequest = await fetch(
-        `https://api.spotify.com/v1/tracks/${songId}?market=US`,
-        {
-          method: "GET",
-          headers: spotifyHeaders,
-        }
-      );
-      const trackInfo = await trackRequest.json();
-
+      const trackInfo = await getSpotifyTrackById(songId, spotifyHeaders);
       const displayArtist = trackInfo.artists[0].name;
       const displayTitle = trackInfo.name;
       const displayAlbum = trackInfo.album.name;
