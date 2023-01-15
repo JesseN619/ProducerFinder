@@ -2,6 +2,12 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectIsLoggedIn } from "..";
 import { setAddSongId } from "./AddSongIdSlice";
+import {
+  getGeniusTopSongs,
+  getProducerId,
+  getProducerImgFromGenius,
+  searchSpotify,
+} from "./fetchCalls";
 
 const geniusToken = process.env.REACT_APP_GENIUS_ACCESS_TOKEN;
 const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
@@ -21,19 +27,7 @@ const playPreview = (e: MouseEvent, preview: string) => {
   return playSong.play();
 };
 
-const searchSpotify = async (songTitle: string, headers: Headers) => {
-  let request = await fetch(
-    `https://api.spotify.com/v1/search?q=${songTitle}&type=track&market=US&limit=5`,
-    {
-      method: "GET",
-      headers: headers,
-    }
-  );
-  let response = await request.json();
-  return response.tracks.items;
-};
-
-export const GeniusLogic = () => {
+export const ProducerTopSongsList = () => {
   const dispatch = useDispatch();
   const storeSongId = (songId: string) => {
     dispatch(setAddSongId(songId));
@@ -55,78 +49,35 @@ export const GeniusLogic = () => {
 
   const search = async () => {
     const getSongId = async () => {
-      let searchBox = document.getElementById(
+      const searchBox = document.getElementById(
         "song-search"
       ) as HTMLInputElement;
-      let searchValue = searchBox.value;
+      const searchValue = searchBox.value;
 
-      let request = await fetch(
+      const request = await fetch(
         `https://api.genius.com/search?q=${searchValue}&access_token=${geniusToken}`,
         {
           method: "GET",
         }
       );
-      let response = await request.json();
-      let songId = response.response.hits[0].result.id;
+      const response = await request.json();
+      const songId = response.response.hits[0].result.id;
       return songId;
     };
 
-    let songId = await getSongId();
+    const songId = await getSongId();
 
-    const getProducerId = async () => {
-      let request = await fetch(
-        `https://api.genius.com/songs/${songId}?access_token=${geniusToken}`,
-        {
-          method: "GET",
-        }
-      );
+    const producerInfo = await getProducerId(songId);
+    const producerId = producerInfo.id;
+    const producerName = producerInfo.name;
 
-      let response = await request.json();
-      // TODO: instead of producer_artists[0], show dropdown of all producers and let user choose
-      let producerId = response.response.song.producer_artists[0].id;
-      let name = response.response.song.producer_artists[0].name;
-      return [producerId, name];
-    };
+    const producerImgURL = await getProducerImgFromGenius(producerId);
 
-    let producerInfo = await getProducerId();
-    let producerId = producerInfo[0];
-    let producerName = producerInfo[1];
-
-    const getProducerPic = async () => {
-      let request = await fetch(
-        `https://api.genius.com/artists/${producerId}?access_token=${geniusToken}`,
-        {
-          method: "GET",
-        }
-      );
-
-      let response = await request.json();
-      console.log("Producer info:");
-      console.log(response.response.artist.image_url);
-      return response.response.artist.image_url;
-    };
-
-    let producerPicURL = await getProducerPic();
-
-    const getTopSongs = async () => {
-      const request = await fetch(
-        `https://api.genius.com/artists/${producerId}/songs?sort=popularity&access_token=${geniusToken}`,
-        {
-          method: "GET",
-        }
-      );
-
-      const response = await request.json();
-      // TODO: instead of producer_artists[0], show dropdown of all producers and let user choose
-      const topSongs = response.response.songs;
-      return topSongs;
-    };
-
-    const topSongs = await getTopSongs();
+    const topSongs = await getGeniusTopSongs(producerId);
 
     const listContainer = document.getElementById("list-container")!;
     listContainer.innerHTML = `<ul id="list"></ul>`;
-    let ul = document.getElementById("list")!;
+    const ul = document.getElementById("list")!;
     ul.className = "text-left";
 
     // Spotify =====================================================
@@ -139,51 +90,46 @@ export const GeniusLogic = () => {
       ["Authorization", `Bearer ${spotifyToken}`],
     ]);
 
-    let songTitle = "";
-
     const producerImg: HTMLImageElement = document.getElementById(
       "producer-image"
     ) as HTMLImageElement;
-    producerImg.src = producerPicURL;
+    producerImg.src = producerImgURL;
     producerImg.className = "rounded";
     const nameSection: HTMLElement = document.getElementById(
       "producer-name"
     ) as HTMLElement;
     nameSection.innerHTML = producerName;
 
-    // loop through producer's top songs
-    for (let i = 0; i < topSongs.length; i++) {
-      songTitle = topSongs[i].title;
-      const artistName = topSongs[i].primary_artist.name;
-      const spotifyResults = await searchSpotify(songTitle, headers);
+    topSongs.forEach(async (song: any) => {
+      const artistName = song.primary_artist.name;
+      const spotifyResults = await searchSpotify(song.title, headers);
 
       const matchingResult = spotifyResults.find(
         (result: any) =>
           result.artists[0].name.toLowerCase() === artistName.toLowerCase()
       );
 
-      if (!matchingResult) continue;
+      if (!matchingResult) return;
 
       let songId = matchingResult.id;
 
       // Get song by songId to get preview URLs (search does not have preview URLs for most songs)
-      let trackRequest = await fetch(
+      const trackRequest = await fetch(
         `https://api.spotify.com/v1/tracks/${songId}?market=US`,
         {
           method: "GET",
           headers: headers,
         }
       );
-      let trackInfo = await trackRequest.json();
-      // console.log(trackInfo);
+      const trackInfo = await trackRequest.json();
 
-      let displayArtist = trackInfo.artists[0].name;
-      let displayTitle = trackInfo.name;
-      let displayAlbum = trackInfo.album.name;
-      let albumCover = trackInfo.album.images[2].url;
+      const displayArtist = trackInfo.artists[0].name;
+      const displayTitle = trackInfo.name;
+      const displayAlbum = trackInfo.album.name;
+      const albumCover = trackInfo.album.images[2].url;
       songId = trackInfo.id;
 
-      let li = document.createElement("li");
+      const li = document.createElement("li");
       li.className =
         "song-list list-none flex whitespace-nowrap items-center my-2 px-2 py-1 bg-white shadow-md rounded";
       li.innerHTML = `<img class="album-cover my-auto" src="${albumCover}" />
@@ -198,13 +144,13 @@ export const GeniusLogic = () => {
                                                 ${displayAlbum}
                                             </p>
                                         </div>`;
-      let allBtnContainer = document.createElement("div");
+      const allBtnContainer = document.createElement("div");
       allBtnContainer.className = "flex ml-auto";
-      let btnContainer = document.createElement("div");
+      const btnContainer = document.createElement("div");
       btnContainer.className = "flex items-center flex-end mr-1";
       if (trackInfo.preview_url) {
-        let preview = trackInfo.preview_url;
-        let previewBtn = document.createElement("button");
+        const preview = trackInfo.preview_url;
+        const previewBtn = document.createElement("button");
         previewBtn.className = "text-xl";
         // previewBtn.innerHTML = '&#9658;';
         previewBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mt-auto text-gray-500 hover:text-gray-600" viewBox="0 0 20 20" fill="currentColor">
@@ -213,7 +159,7 @@ export const GeniusLogic = () => {
         previewBtn.addEventListener("click", (e) => playPreview(e, preview));
         btnContainer.appendChild(previewBtn);
 
-        let stopBtn = document.createElement("button");
+        const stopBtn = document.createElement("button");
         stopBtn.className = "mr-1 text-xl";
         stopBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-500 hover:text-gray-600" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
@@ -224,9 +170,9 @@ export const GeniusLogic = () => {
       allBtnContainer.appendChild(btnContainer);
 
       if (isLoggedIn) {
-        let addBtnContainer = document.createElement("div");
+        const addBtnContainer = document.createElement("div");
         addBtnContainer.className = "flex items-center";
-        let addBtn = document.createElement("button");
+        const addBtn = document.createElement("button");
         addBtn.className =
           "bg-blue-600 hover:bg-blue-700 px-2 rounded text-xl text-gray-200 font-semibold";
         addBtn.innerHTML = "+";
@@ -237,7 +183,7 @@ export const GeniusLogic = () => {
 
       li.appendChild(allBtnContainer);
       ul.appendChild(li);
-    }
+    });
   };
 
   return (
