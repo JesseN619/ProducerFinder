@@ -6,12 +6,11 @@ import {
   getGeniusTopSongs,
   getProducerId,
   getProducerImgFromGenius,
+  getSpotifyToken,
   searchSpotify,
 } from "./fetchCalls";
 
 const geniusToken = process.env.REACT_APP_GENIUS_ACCESS_TOKEN;
-const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
-const clientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
 
 let playSong: HTMLAudioElement;
 const stopSong = () => {
@@ -33,19 +32,6 @@ export const ProducerTopSongsList = () => {
     dispatch(setAddSongId(songId));
   };
   const isLoggedIn = useSelector(selectIsLoggedIn);
-
-  const getSpotifyToken = async () => {
-    const result = await fetch("https://accounts.spotify.com/api/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: "Basic " + btoa(clientId + ":" + clientSecret),
-      },
-      body: "grant_type=client_credentials",
-    });
-    const data = await result.json();
-    return data.access_token;
-  };
 
   const search = async () => {
     const getSongId = async () => {
@@ -83,8 +69,7 @@ export const ProducerTopSongsList = () => {
     // Spotify =====================================================
 
     const spotifyToken = await getSpotifyToken();
-
-    const headers = new Headers([
+    const spotifyHeaders = new Headers([
       ["Content-Type", "application/json"],
       ["Accept", "application/json"],
       ["Authorization", `Bearer ${spotifyToken}`],
@@ -102,7 +87,7 @@ export const ProducerTopSongsList = () => {
 
     topSongs.forEach(async (song: any) => {
       const artistName = song.primary_artist.name;
-      const spotifyResults = await searchSpotify(song.title, headers);
+      const spotifyResults = await searchSpotify(song.title, spotifyHeaders);
 
       const matchingResult = spotifyResults.find(
         (result: any) =>
@@ -118,7 +103,7 @@ export const ProducerTopSongsList = () => {
         `https://api.spotify.com/v1/tracks/${songId}?market=US`,
         {
           method: "GET",
-          headers: headers,
+          headers: spotifyHeaders,
         }
       );
       const trackInfo = await trackRequest.json();

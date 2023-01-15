@@ -1,4 +1,6 @@
 const geniusToken = process.env.REACT_APP_GENIUS_ACCESS_TOKEN;
+const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
+const clientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
 
 export const getProducerId = async (songId: string) => {
   const request = await fetch(
@@ -36,6 +38,19 @@ export const getGeniusTopSongs = async (producerId: string) => {
   const response = await request.json();
   const topSongs = response.response.songs;
   return topSongs;
+};
+
+export const getSpotifyToken = async () => {
+  const result = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: "Basic " + btoa(clientId + ":" + clientSecret),
+    },
+    body: "grant_type=client_credentials",
+  });
+  const data = await result.json();
+  return data.access_token;
 };
 
 export const searchSpotify = async (songTitle: string, headers: Headers) => {
